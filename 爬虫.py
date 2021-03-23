@@ -20,9 +20,15 @@ req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码
 result=json.loads(req);
 maxPage=result['maxPage']
 count=1
-for page in range(1,maxPage+1):
+for i in range(0,len(result['list'])):
+    print("爬取第",count,"个评论")
+    count=count+1
+    print(result['list'][i]['text'])
+for page in range(2,maxPage+1):
     params["page"]=str(page);
-    for i in range(0,10):
+    req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
+    result=json.loads(req);
+    for i in range(0,len(result['list'])):
         print("爬取第",count,"个评论")
         count=count+1
         print(result['list'][i]['text'])
