@@ -18,7 +18,7 @@ params={                                #必带信息 都可调
 
 req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
 result=json.loads(req);
-maxPage=result['maxPage']
+maxPage= result['maxPage']
 count=1
 for page in range(1,maxPage+1):
     params["page"]=str(page);
