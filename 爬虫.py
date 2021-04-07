@@ -24,7 +24,7 @@ params={                                #必带信息 都可调
 '''
 req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
 result=json.loads(req);
-maxPage=result['maxPage']
+maxPage= result['maxPage']
 count=1
 data=open("爬虫结果.txt",'w+',encoding='utf-8') 
 for i in range(0,len(result['list'])):
