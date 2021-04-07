@@ -1,5 +1,10 @@
 import requests
 import json
+#import sys
+#import os
+import xlwt
+import re
+
 url="https://xueqiu.com/query/v1/symbol/search/status"
 header={ #不用变
 
@@ -10,25 +15,64 @@ header={ #不用变
 params={                                #必带信息 都可调
 
     "symbol":"SH600415", #股票标识码
-    "source":"all", #评论筛选 all=全部 user=讨论 trans=交易 自选股新闻=资讯 公告=公告 研报=研报
+    "source":"user", #评论筛选 all=全部 user=讨论 trans=交易 自选股新闻=资讯 公告=公告 研报=研报
     "sort":"time",  #按什么排列 time 时间 alpha 热度
     "page":"1", #页码 目前看都有100页
 
     }
-
+#保存为txt
+'''
 req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
 result=json.loads(req);
 maxPage=result['maxPage']
 count=1
+data=open("爬虫结果.txt",'w+',encoding='utf-8') 
 for i in range(0,len(result['list'])):
-    print("爬取第",count,"个评论")
+    print("正在爬取第",count,"个评论")
+    print(result['list'][i]['text'],file=data)
     count=count+1
-    print(result['list'][i]['text'])
 for page in range(2,maxPage+1):
     params["page"]=str(page);
     req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
     result=json.loads(req);
     for i in range(0,len(result['list'])):
-        print("爬取第",count,"个评论")
+        print("正在爬取第",count,"个评论")
+        print(result['list'][i]['text'],file=data)
         count=count+1
-        print(result['list'][i]['text'])
+print("爬取完毕")
+'''
+
+#保存为excel
+req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
+result=json.loads(req);
+maxPage=result['maxPage']
+total=1
+xls = xlwt.Workbook()
+sheet = xls.add_sheet('sample')
+sheet.write(0,0,"用户名")
+sheet.write(0,1,"时间")
+sheet.write(0,2,"内容")
+for i in range(0,len(result['list'])):
+    print("正在爬取第1页第",i+1,"个评论")
+    sheet.write(total,0,result['list'][i]['user']['screen_name'])
+    sheet.write(total,1,result['list'][i]['timeBefore'])
+    pattern = re.compile(r'<[^>]+>',re.S)
+    tmp = pattern.sub('', result['list'][i]['text'])   #去除评论里的html标签
+    sheet.write(total, 2, tmp)
+    total=total+1
+    i=i+1
+for page in range(2,maxPage+1):
+    params["page"]=str(page);
+    req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
+    result=json.loads(req);
+    for i in range(0,len(result['list'])):
+        print("正在爬取第",page,"页第",i+1,"个评论")
+        sheet.write(total,0,result['list'][i]['user']['screen_name'])
+        sheet.write(total,1,result['list'][i]['timeBefore'])
+        pattern = re.compile(r'<[^>]+>',re.S)
+        tmp = pattern.sub('', result['list'][i]['text'])
+        sheet.write(total, 2, tmp)
+        total=total+1
+        i=i+1
+xls.save("excel导出测试.xls")
+print("爬取完毕")
