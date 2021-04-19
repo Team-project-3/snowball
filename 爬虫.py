@@ -4,6 +4,8 @@ import json
 #import os
 import xlwt
 import re
+import xlrd
+from xlutils.copy import copy
 
 url="https://xueqiu.com/query/v1/symbol/search/status"
 header={ #不用变
@@ -42,7 +44,9 @@ for page in range(2,maxPage+1):
 print("爬取完毕")
 '''
 
+
 #保存为excel
+"""
 req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
 result=json.loads(req);
 maxPage=result['maxPage']
@@ -74,5 +78,51 @@ for page in range(2,maxPage+1):
         sheet.write(total, 2, tmp)
         total=total+1
         i=i+1
-xls.save("excel导出测试.xls")
+name=params["symbol"]
+path=".\\评论\\"+name+".xls"
+xls.save(path)
+print("爬取完毕")
+"""
+
+#断点续传
+req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
+result=json.loads(req);
+maxPage=result['maxPage']
+name=params["symbol"]
+path=".\\评论\\"+name+".xls"
+
+try:
+    rb = xlrd.open_workbook(path)
+except FileNotFoundError:
+    xls = xlwt.Workbook()
+    sheet = xls.add_sheet('sample')
+    sheet.write(0,0,"用户名")
+    sheet.write(0,1,"时间")
+    sheet.write(0,2,"内容")
+    xls.save(path)
+    rb = xlrd.open_workbook(path)
+
+sheets = rb.sheet_names()  # 获取工作簿中的所有工作表名字，形成列表元素
+sheet_old = rb.sheet_by_name(sheets[0])  # 通过sheets[0]工作表名称获取工作簿中所有工作表中的的第一个工作表
+rows_old = sheet_old.nrows
+page_old = (rows_old-1)//10
+total=rows_old
+wb = copy(rb)
+sheet = wb.get_sheet(0)
+
+for page in range(page_old+1,maxPage+1):
+    params["page"]=str(page);
+    req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
+    result=json.loads(req);
+    for i in range(0,len(result['list'])):
+        print("正在爬取第",page,"页第",i+1,"个评论")
+        sheet.write(total,0,result['list'][i]['user']['screen_name'])
+        sheet.write(total,1,result['list'][i]['timeBefore'])
+        pattern = re.compile(r'<[^>]+>',re.S)
+        tmp = pattern.sub('', result['list'][i]['text'])
+        sheet.write(total, 2, tmp)
+        total=total+1
+        i=i+1
+    wb.save(path)
+
 print("爬取完毕")
