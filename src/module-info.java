@@ -6,4 +6,5 @@
  *
  */
 module snowball {
+	requires java.desktop;
 }
