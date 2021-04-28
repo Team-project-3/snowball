@@ -26,7 +26,7 @@ public class SpiderTest {
 	@Test
 	public void testCheck() throws IOException {
 		spider.check();
-		assertEquals(2, spider.getCheck());
+		assertEquals(1, spider.getCheck());
 	}
 
 }

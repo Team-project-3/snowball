@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Spider {
-	//E:\\学习\\团队项目开发\\workspace\\test\\
-	static String cmd1 = "爬虫.exe";
-	static String cmd2 = "爬虫检查.exe";
+	static String cmd1 = "爬虫.py";
+	static String cmd2 = "爬虫检查.py";
     static String code = "SH600415";
-    static int spiderFlag = -1;//0：失败 1：成功
-    static int spiderCheck = -1;//0：文件不存在 1：爬取不完整 2：爬取完整
+    static String conv = "python";
+    static int spiderFlag = -1;//0：失败 1：成功（测试的时候填）
+    static int spiderCheck = -1;//0：文件不存在 1：爬取不完整 2：爬取完整（测试的时候填）
 	public void main(String[] args) throws IOException, InterruptedException {
 		//System.out.println(System.getProperty("user.dir"));//user.dir指定了当前的路径
-	    String[] command = new String[]{cmd1,code};
+	    String[] command = new String[]{conv,cmd1,code};
 	    BufferedReader br = null;
 	    BufferedReader brError = null;
 	    System.out.println("开始爬取");
@@ -43,7 +43,7 @@ public class Spider {
 	    
 	    }	
 	public void check() throws IOException {
-		String[] command = new String[]{cmd2,code};
+		String[] command = new String[]{conv,cmd2,code};
 	    BufferedReader br = null;
 	    BufferedReader brError = null;
 	    System.out.println("开始检查");
