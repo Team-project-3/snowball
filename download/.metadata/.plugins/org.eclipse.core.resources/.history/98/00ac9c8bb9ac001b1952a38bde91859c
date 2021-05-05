@@ -1,0 +1,8 @@
+package manager;
+
+public class Test {
+	public static void main(String[] args) {
+		Manager.getRes("SH600415");
+		Manager.getRes("SZ002353");
+	}
+}

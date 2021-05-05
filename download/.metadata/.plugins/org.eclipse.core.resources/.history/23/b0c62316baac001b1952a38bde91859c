@@ -1,0 +1,52 @@
+package manager;
+import java.io.IOException;
+
+import spider.Spider;
+
+public class Manager extends Thread {
+	private String code;
+	static int num;
+    
+    public Manager(String code){
+        this.code = code;
+    }
+    
+    public void run() {
+        System.out.println("code:"+code+" 子线程ID:"+Thread.currentThread().getId());
+        try {
+			num = Spider.run(code);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
+	public int getResult() {
+		while(num!=1)
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return num;
+	}
+	
+	public int getRes() {
+
+		Manager t = new Manager(code);
+		t.start();
+		while(num!=1)
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		System.out.println(code+"下载完成");
+		return 1;
+	}
+}

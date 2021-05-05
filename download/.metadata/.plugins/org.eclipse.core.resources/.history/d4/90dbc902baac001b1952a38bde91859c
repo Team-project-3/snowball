@@ -1,0 +1,10 @@
+package manager;
+
+public class Test {
+	public static void main(String[] args) {
+		Manager t1 = new Manager("SH600415");
+		Manager t2 = new Manager("SZ002353");
+		t1.getRes();
+		t2.getRes();
+	}
+}
