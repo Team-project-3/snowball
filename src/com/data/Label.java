@@ -1,15 +1,18 @@
 package com.data;
 
+import java.util.ArrayList;
+
 public class Label {
     private int id;
     private String content;
-    private String[] options;
+    private ArrayList<String> options;
 
 
     public Label() {
+    	options = new ArrayList<String>();
     }
 
-    public Label(int id, String content, String[] options) {
+    public Label(int id, String content, ArrayList<String> options) {
         this.id = id;
         this.content = content;
         this.options = options;
@@ -31,12 +34,12 @@ public class Label {
         this.content = content;
     }
 
-    public String[] getOptions() {
+    public ArrayList<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String[] options) {
-        this.options = options;
-    }
+//    public void setOptions(ArrayList<String> options) {
+//        this.options = options;
+//    }
 
 }

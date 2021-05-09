@@ -3,31 +3,30 @@ package com.data;
 import java.util.ArrayList;
 
 public class DataBank {
-    private int commentSize = 0;
-    private ArrayList<Comment> commentArrayList = new ArrayList<>();//存储评论数据
-
-    public DataBank() {
+    private ArrayList<Comment> commentList;
+    private ArrayList<Label> labelList;
+    
+    public ArrayList<Comment> getCommentList() {
+    	return commentList;
     }
-
-    public int getCommentSize() {
-        return commentSize;
+    
+    public boolean addComment(Comment comment) {
+    	return commentList.add(comment);
     }
-
-    public void setCommentSize(int commentSize) {
-        this.commentSize = commentSize;
+    
+    public boolean removeComment(Comment comment) {
+    	return commentList.remove(comment);
     }
-
-
-    public ArrayList<Comment> getCommentArrayList() {
-        return commentArrayList;
+    
+    public ArrayList<Label> getLabelList() {
+    	return labelList;
     }
-
-    public void setCommentArrayList(ArrayList<Comment> commentArrayList) {
-        this.commentArrayList = commentArrayList;
-        this.commentSize = commentArrayList.size();
+    
+    public boolean addLabel(Label label) {
+    	return labelList.add(label);
     }
-
-    public boolean deleteLabel(Label label){
-        return true;
+    
+    public boolean removeLabel(Label label) {
+    	return labelList.remove(label);
     }
 }
