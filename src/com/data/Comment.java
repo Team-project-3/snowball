@@ -39,7 +39,7 @@ public class Comment {
         return labelList;
     }
 
-//    public void setLabelArrayList(ArrayList<Int> labelArrayList) {
-//        this.labelArrayList = labelArrayList;
-//    }
+    public void setLabelArrayList(ArrayList<Integer> labelArrayList) {
+        this.labelList = labelArrayList;
+    }
 }

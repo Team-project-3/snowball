@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class CommentTest {
+class DataBankTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -17,12 +17,17 @@ class CommentTest {
 	}
 
 	@Test
-	void testGetContent() {
+	void testGetCommentList() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	void testSetContent() {
+	void testAddComment() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testRemoveComment() {
 		fail("Not yet implemented");
 	}
 
@@ -32,7 +37,12 @@ class CommentTest {
 	}
 
 	@Test
-	void testSetLabelArrayList() {
+	void testAddLabel() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testRemoveLabel() {
 		fail("Not yet implemented");
 	}
 

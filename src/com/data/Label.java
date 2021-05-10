@@ -38,8 +38,8 @@ public class Label {
         return options;
     }
 
-//    public void setOptions(ArrayList<String> options) {
-//        this.options = options;
-//    }
+    public void setOptions(ArrayList<String> options) {
+        this.options = options;
+    }
 
 }

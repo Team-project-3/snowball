@@ -11,6 +11,10 @@ public class Tools {
 		
 	}
 	
+	public void getDownloading(int ID) {
+		
+	}
+	
 	public void importData(String file_path) {
 		
 	}
@@ -20,6 +24,10 @@ public class Tools {
 	}
 	
 	public void addLabel(Label label) {
+		
+	}
+
+	public void removeLabel(Label label) {
 		
 	}
 	
