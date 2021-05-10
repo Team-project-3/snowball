@@ -7,19 +7,27 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public void downloadData(int ID) {
+	public void downloadData(String ID) {
 		
 	}
 	
-	public void importData(String path) {
+	public void getDownloading(String ID) {
 		
 	}
 	
-	public void exportData(String path) {
+	public void importData(String file_path) {
+		
+	}
+	
+	public void exportData(String dir_path, String filename) {
 		
 	}
 	
 	public void addLabel(Label label) {
+		
+	}
+
+	public void removeLabel(Label label) {
 		
 	}
 	
