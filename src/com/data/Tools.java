@@ -11,11 +11,11 @@ public class Tools {
 		
 	}
 	
-	public void importData(String path) {
+	public void importData(String file_path) {
 		
 	}
 	
-	public void exportData(String path) {
+	public void exportData(String dir_path, String filename) {
 		
 	}
 	
