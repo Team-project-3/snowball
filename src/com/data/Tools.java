@@ -7,11 +7,11 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public void downloadData(int ID) {
+	public void downloadData(String ID) {
 		
 	}
 	
-	public void getDownloading(int ID) {
+	public void getDownloading(String ID) {
 		
 	}
 	
