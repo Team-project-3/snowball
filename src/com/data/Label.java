@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 public class Label {
     private int id;
-    private String name;
+    private String content;
     private ArrayList<String> options;
 
 
     public Label() {
+    	options = new ArrayList<String>();
     }
 
     public Label(int id, String content, ArrayList<String> options) {

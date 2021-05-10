@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class Comment {
     private  int id;
     private String content;
-    private ArrayList<Integer> labelArrayList;
+    private ArrayList<Integer> labelList;
 
     public Comment() {
-    	labelArrayList = new ArrayList<>();
+    	labelList = new ArrayList<>();
     }
 
     public int getId() {
@@ -35,11 +35,12 @@ public class Comment {
                 '}';
     }
 
-    public ArrayList<Integer> getLabelArrayList() {
-        return labelArrayList;
+
+    public ArrayList<Integer> getLabelList() {
+        return labelList;
     }
 
     public void setLabelArrayList(ArrayList<Integer> labelArrayList) {
-        this.labelArrayList = labelArrayList;
+        this.labelList = labelArrayList;
     }
 }
