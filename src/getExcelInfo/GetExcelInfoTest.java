@@ -1,4 +1,4 @@
-package getExcelInfo;
+ï»¿package getExcelInfo;
 
 import static org.junit.Assert.*;
 
@@ -21,7 +21,7 @@ public class GetExcelInfoTest {
 	@Test
 	public void testReadExcel() {
         GetExcelInfo obj = new GetExcelInfo();  
-        File file = new File("./ÆÀÂÛ/SH600415.xls");  
+        File file = new File("./è¯„è®º/SH600415.xls");  
         obj.readExcel(file);  
 	}
 

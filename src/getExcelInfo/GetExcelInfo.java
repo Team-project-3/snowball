@@ -1,4 +1,4 @@
-package getExcelInfo;
+ï»¿package getExcelInfo;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,21 +12,21 @@ import jxl.read.biff.BiffException;
 
 public class GetExcelInfo {
 
-    // È¥¶ÁExcelµÄ·½·¨readExcel£¬¸Ã·½·¨µÄÈë¿Ú²ÎÊıÎªÒ»¸öFile¶ÔÏó  
+    // å»è¯»Excelçš„æ–¹æ³•readExcelï¼Œè¯¥æ–¹æ³•çš„å…¥å£å‚æ•°ä¸ºä¸€ä¸ªFileå¯¹è±¡  
     public void readExcel(File file) {  
         try {  
-            // ´´½¨ÊäÈëÁ÷£¬¶ÁÈ¡Excel  
+            // åˆ›å»ºè¾“å…¥æµï¼Œè¯»å–Excel  
             InputStream is = new FileInputStream(file.getAbsolutePath());  
-            // jxlÌá¹©µÄWorkbookÀà  
+            // jxlæä¾›çš„Workbookç±»  
             Workbook wb = Workbook.getWorkbook(is);  
-            // ExcelµÄÒ³Ç©ÊıÁ¿  
+            // Excelçš„é¡µç­¾æ•°é‡  
             int sheet_size = wb.getNumberOfSheets();  
             for (int index = 0; index < sheet_size; index++) {  
-                // Ã¿¸öÒ³Ç©´´½¨Ò»¸öSheet¶ÔÏó  
+                // æ¯ä¸ªé¡µç­¾åˆ›å»ºä¸€ä¸ªSheetå¯¹è±¡  
                 Sheet sheet = wb.getSheet(index);  
-                // sheet.getRows()·µ»Ø¸ÃÒ³µÄ×ÜĞĞÊı  
+                // sheet.getRows()è¿”å›è¯¥é¡µçš„æ€»è¡Œæ•°  
                 for (int i = 1; i < sheet.getRows(); i++) {  
-                    // sheet.getColumns()·µ»Ø¸ÃÒ³µÄ×ÜÁĞÊı  
+                    // sheet.getColumns()è¿”å›è¯¥é¡µçš„æ€»åˆ—æ•°  
  
                         String cellinfo = sheet.getCell(3, i).getContents();  
                         System.out.println(cellinfo);  

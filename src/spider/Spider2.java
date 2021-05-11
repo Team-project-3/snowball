@@ -1,4 +1,4 @@
-package spider;
+ï»¿package spider;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,26 +7,26 @@ import java.io.InputStreamReader;
 
 public class Spider2 {
 	
-	static String cmd1 = "ÅÀ³æ.py";
-	static String cmd2 = "ÅÀ³æ¼ì²é.py";
+	static String cmd1 = "çˆ¬è™«.py";
+	static String cmd2 = "çˆ¬è™«æ£€æŸ¥.py";
     static String conv = "python";
 	public int run(String code) throws IOException, InterruptedException {
-		//System.out.println(System.getProperty("user.dir"));//user.dirÖ¸¶¨ÁËµ±Ç°µÄÂ·¾¶
+		//System.out.println(System.getProperty("user.dir"));//user.diræŒ‡å®šäº†å½“å‰çš„è·¯å¾„
 	    String[] command = new String[]{conv,cmd1,code};
 
         Process p = Runtime.getRuntime().exec(command);
-	    System.out.println(code+":¿ªÊ¼ÅÀÈ¡");
+	    System.out.println(code+":å¼€å§‹çˆ¬å–");
 	    new InputStreamRunnable(p.getErrorStream()).start();
 	    new InputStreamRunnable(p.getInputStream()).start();
 	    p.waitFor();
 	    p.destroy();
 	    for(int i=0;i<3;i++) {
 	    	if(check(code)) {
-	    		return 1;//·µ»Ø1´ú±í³É¹¦
+	    		return 1;//è¿”å›1ä»£è¡¨æˆåŠŸ
 	    	}
 	    	else if(i<2){
 	    		p = Runtime.getRuntime().exec(command);
-	    	    System.out.println(code+":¿ªÊ¼ÅÀÈ¡");
+	    	    System.out.println(code+":å¼€å§‹çˆ¬å–");
 	    	    new InputStreamRunnable(p.getErrorStream()).start();
 	    	    new InputStreamRunnable(p.getInputStream()).start();
 	    	    p.waitFor();
@@ -41,23 +41,23 @@ public class Spider2 {
 		String[] command = new String[]{conv,cmd2,code};
 	    BufferedReader br = null;
 	    BufferedReader brError = null;
-	    System.out.println(code+":¿ªÊ¼¼ì²é");
+	    System.out.println(code+":å¼€å§‹æ£€æŸ¥");
 	    try {
 	    	Process p = Runtime.getRuntime().exec(command);
             String line = null;
             br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             brError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while ((line = br.readLine()) != null  || (line = brError.readLine()) != null) {
-            	if(line.equals("ÎÄ¼ş²»´æÔÚ")) {
-            		System.out.println(code+":ÎÄ¼ş²»´æÔÚ");
+            	if(line.equals("æ–‡ä»¶ä¸å­˜åœ¨")) {
+            		System.out.println(code+":æ–‡ä»¶ä¸å­˜åœ¨");
                 	return false;
                 }
-                else if(line.equals("ÅÀÈ¡²»ÍêÕû")) {
-                	System.out.println(code+":ÅÀÈ¡²»ÍêÕû");
+                else if(line.equals("çˆ¬å–ä¸å®Œæ•´")) {
+                	System.out.println(code+":çˆ¬å–ä¸å®Œæ•´");
                 	return false;
                 }
-                else if(line.equals("ÅÀÈ¡ÍêÕû")) {
-                	System.out.println(code+":ÅÀÈ¡ÍêÕû");
+                else if(line.equals("çˆ¬å–å®Œæ•´")) {
+                	System.out.println(code+":çˆ¬å–å®Œæ•´");
                 	return true;
                 }
             }

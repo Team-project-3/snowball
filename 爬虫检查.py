@@ -4,7 +4,10 @@ import sys
 import xlrd
 import time
 import re
+import sys
+import io
 
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8') 
 url="https://xueqiu.com/query/v1/symbol/search/status"
 header={ #不用变
 

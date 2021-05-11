@@ -1,4 +1,4 @@
-package spider;
+ï»¿package spider;
 
 import static org.junit.Assert.*;
 
@@ -15,20 +15,20 @@ public class SpiderTest {
 	/*
 	@Before
 	public void setUp() throws Exception {
-		File src = new File("./ÆÀÂÛ/"+code+".xls");
+		File src = new File("./è¯„è®º/"+code+".xls");
 		if(src.exists()) {
-			File dest = new File("./ÆÀÂÛ/"+code+"(2).xls");
+			File dest = new File("./è¯„è®º/"+code+"(2).xls");
 			src.renameTo(dest);
 		}
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		File f=new File("./ÆÀÂÛ/"+code+".xls");
+		File f=new File("./è¯„è®º/"+code+".xls");
 		f.delete();
-		File src = new File("./ÆÀÂÛ/"+code+"(2).xls");
+		File src = new File("./è¯„è®º/"+code+"(2).xls");
 		if(src.exists()) {
-			File dest = new File("./ÆÀÂÛ/"+code+".xls");
+			File dest = new File("./è¯„è®º/"+code+".xls");
 			src.renameTo(dest);
 		}
 	}

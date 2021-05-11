@@ -1,5 +1,6 @@
 package com.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
@@ -18,7 +19,8 @@ class ToolsTest {
 
 	@Test
 	void testDownloadData() {
-		fail("Not yet implemented");
+		num1 = downloadData(SH600415);
+		assertEquals(1, num1);
 	}
 
 	@Test

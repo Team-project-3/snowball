@@ -6,8 +6,11 @@ import time
 import xlwt
 import re
 import xlrd
+import sys
+import io
 from xlutils.copy import copy
 
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8') 
 url="https://xueqiu.com/query/v1/symbol/search/status"
 
 header={ #不用变

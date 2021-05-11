@@ -1,5 +1,7 @@
 package com.data;
 
+import manager.Manager;
+
 public class Tools {
 	private DataBank db;
 
@@ -7,12 +9,15 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public void downloadData(String ID) {
+	public int downloadData(String ID) {
+		Manager t1 = new Manager(ID);
+		t1.start();
+		return t1.getResult();
 		
 	}
 	
 	public void getDownloading(String ID) {
-		
+		System.out.println(downloadData(ID));
 	}
 	
 	public void importData(String file_path) {

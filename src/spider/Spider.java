@@ -1,26 +1,26 @@
-package spider;
+ï»¿package spider;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Spider {
-	static String cmd1 = "ÅÀ³æ.py";
-	static String cmd2 = "ÅÀ³æ¼ì²é.py";
+	static String cmd1 = "çˆ¬è™«.py";
+	static String cmd2 = "çˆ¬è™«æ£€æŸ¥.py";
     static String conv = "python";
 	public int run(String code) throws IOException, InterruptedException {
-		//System.out.println(System.getProperty("user.dir"));//user.dirÖ¸¶¨ÁËµ±Ç°µÄÂ·¾¶
+		//System.out.println(System.getProperty("user.dir"));//user.diræŒ‡å®šäº†å½“å‰çš„è·¯å¾„
 	    String[] command = new String[]{conv,cmd1,code};
 	    BufferedReader br = null;
 	    BufferedReader brError = null;
         String line = null;
         Process p;
-	    System.out.println("¿ªÊ¼ÅÀÈ¡"+" ×ÓÏß³ÌID:"+Thread.currentThread().getId());
+	    System.out.println("å¼€å§‹çˆ¬å–"+" å­çº¿ç¨‹ID:"+Thread.currentThread().getId());
 	    try {
 	    	p = Runtime.getRuntime().exec(command);
             br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             brError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while ((line = br.readLine()) != null  || (line = brError.readLine()) != null) {
-            	System.out.println(line+" ×ÓÏß³ÌID:"+Thread.currentThread().getId());
+            	System.out.println(line+" å­çº¿ç¨‹ID:"+Thread.currentThread().getId());
             }
 	    }catch(Exception e){
 	    	e.printStackTrace();
@@ -35,17 +35,17 @@ public class Spider {
 	    }
 	    for(int i=0;i<3;i++) {
 	    	if(check(code)) {
-	    		return 1;//·µ»Ø1´ú±í³É¹¦
+	    		return 1;//è¿”å›1ä»£è¡¨æˆåŠŸ
 	    	}
 	    	else if(i<2){
-	    		System.out.println("¿ªÊ¼ÅÀÈ¡"+" ×ÓÏß³ÌID:"+Thread.currentThread().getId());
+	    		System.out.println("å¼€å§‹çˆ¬å–"+" å­çº¿ç¨‹ID:"+Thread.currentThread().getId());
 	    	    try {
 	    	    	p = Runtime.getRuntime().exec(command);
 	                line = null;
 	                br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 	                brError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 	                while ((line = br.readLine()) != null  || (line = brError.readLine()) != null) {
-	                	System.out.println(line+" ×ÓÏß³ÌID:"+Thread.currentThread().getId());
+	                	System.out.println(line+" å­çº¿ç¨‹ID:"+Thread.currentThread().getId());
 	                }
 	    	    }catch(Exception e){
 	    	    	e.printStackTrace();
@@ -68,23 +68,23 @@ public class Spider {
 		String[] command = new String[]{conv,cmd2,code};
 	    BufferedReader br = null;
 	    BufferedReader brError = null;
-	    System.out.println("¿ªÊ¼¼ì²é"+" ×ÓÏß³ÌID:"+Thread.currentThread().getId());
+	    System.out.println("å¼€å§‹æ£€æŸ¥"+" å­çº¿ç¨‹ID:"+Thread.currentThread().getId());
 	    try {
 	    	Process p = Runtime.getRuntime().exec(command);
             String line = null;
             br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             brError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while ((line = br.readLine()) != null  || (line = brError.readLine()) != null) {
-            	if(line.equals("ÎÄ¼ş²»´æÔÚ")) {
-            		System.out.println("ÎÄ¼ş²»´æÔÚ"+" ×ÓÏß³ÌID:"+Thread.currentThread().getId());
+            	if(line.equals("æ–‡ä»¶ä¸å­˜åœ¨")) {
+            		System.out.println("æ–‡ä»¶ä¸å­˜åœ¨"+" å­çº¿ç¨‹ID:"+Thread.currentThread().getId());
                 	return false;
                 }
-                else if(line.equals("ÅÀÈ¡²»ÍêÕû")) {
-                	System.out.println("ÅÀÈ¡²»ÍêÕû"+" ×ÓÏß³ÌID:"+Thread.currentThread().getId());
+                else if(line.equals("çˆ¬å–ä¸å®Œæ•´")) {
+                	System.out.println("çˆ¬å–ä¸å®Œæ•´"+" å­çº¿ç¨‹ID:"+Thread.currentThread().getId());
                 	return false;
                 }
-                else if(line.equals("ÅÀÈ¡ÍêÕû")) {
-                	System.out.println("ÅÀÈ¡ÍêÕû"+" ×ÓÏß³ÌID:"+Thread.currentThread().getId());
+                else if(line.equals("çˆ¬å–å®Œæ•´")) {
+                	System.out.println("çˆ¬å–å®Œæ•´"+" å­çº¿ç¨‹ID:"+Thread.currentThread().getId());
                 	return true;
                 }
             }
