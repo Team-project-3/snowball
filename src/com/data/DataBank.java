@@ -6,6 +6,11 @@ public class DataBank {
     private ArrayList<Comment> commentList;
     private ArrayList<Label> labelList;
     
+    public DataBank() {
+    	commentList = new ArrayList<>();
+    	labelList = new ArrayList<>();
+    }
+    
     public ArrayList<Comment> getCommentList() {
     	return commentList;
     }

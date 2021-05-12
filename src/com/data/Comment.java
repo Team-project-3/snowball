@@ -35,6 +35,7 @@ public class Comment {
                 '}';
     }
 
+
     public ArrayList<Integer> getLabelList() {
         return labelList;
     }
