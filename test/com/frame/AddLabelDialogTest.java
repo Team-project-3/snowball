@@ -21,18 +21,22 @@ class AddLabelDialogTest {
 	void tearDown() throws Exception {
 	}
 
-
+	@Test
+	void testShow() {
+		fail("Not yet implemented");
+	}
 
 	@Test
 	void testGetLabel() {
-		AddLabelDialog.show();
-		Label labeltest = AddLabelDialog.getLabel();
+		AddLabelDialog dialog = new AddLabelDialog();
+		dialog.show(null);
+		Label labeltest = dialog.getLabel();
 		String ceshi="测试";
-		  ArrayList<String> array=new ArrayList<String>();
-		  array.add("hello");
-		  array.add("world");
+		ArrayList<String> array=new ArrayList<String>();
+		array.add("hello");
+		array.add("world");
 		Label expecteds = new Label(0,ceshi,array);
-		Assert.assertEquals(ceshi,labeltest.getContent());
+		Assert.assertEquals(ceshi, labeltest.getContent());
 	}
 
 }

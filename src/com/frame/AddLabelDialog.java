@@ -18,18 +18,17 @@ import javax.swing.JTextField;
 import com.data.Label;
 
 public class AddLabelDialog {
-	private static Label label1;
-	
+	private Label label;
+	String labelContent;
 	
 	public AddLabelDialog() {
-		
+        label = new Label();
 	}
 
 	// 该方法显示对话框
-	public static void show() {
+	public void show(Frame maintainFrame) {
 		  //1.弹出对话框
         JDialog jDialog;
-        Frame maintainFrame = null;
 
 		jDialog = new JDialog(maintainFrame,"添加标签",true);
         jDialog.setBounds(600,250,300,400);
@@ -41,7 +40,7 @@ public class AddLabelDialog {
         jPanel.setSize(300,300);
         jPanel.setLayout(null);
    
-       JTextField labelName = new JTextField(10);
+        JTextField labelName = new JTextField(10);
         labelName.setLocation(5,10);
         labelName.setHorizontalAlignment(JTextField.LEFT);
         JLabel labName = new JLabel("标签 ");
@@ -82,25 +81,26 @@ public class AddLabelDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jDialog.show(false);
-                String Labelcontent = labelName.getText();
-                label1 = new Label();
-                label1.setContent(Labelcontent);
-                System.out.println(label1.getContent());
+                labelContent = labelName.getText();
+                System.out.println(labelContent); 
+                label.setContent(labelContent);
+                System.out.println(label.getContent());
                 
                 String Labeloptions1 = options1.getText();
                 String Labeloptions2 = options2.getText();
-                label1.getOptions().add(Labeloptions1);
-                label1.getOptions().add(Labeloptions2);
+                label.getOptions().clear();
+                label.getOptions().add(Labeloptions1);
+                label.getOptions().add(Labeloptions2);
                 
-                System.out.println(label1.getOptions()) ; 
+                System.out.println(label.getOptions()) ; 
             }
         });
         
 	}
 	
 	// 该方法获得要添加的标签的信息
-	public static Label getLabel() {
-		return label1;
+	public Label getLabel() {
+		return label;
 	}
 	
 }
