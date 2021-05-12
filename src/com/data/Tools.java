@@ -12,21 +12,17 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public int downloadData(String ID) {
-		Manager t1 = new Manager(ID);
-		t1.start();
-		try {
-			t1.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return t1.getResult();
+	public void downloadData(String ID) {
+		Manager t = new Manager(ID);
+		t.start();
+		//return t.getResult();
 		
 	}
 	
 	public void getDownloading(String ID) {
-		System.out.println(downloadData(ID));
+		Manager t = new Manager();
+		t.printCode();
+		t.printState();
 	}
 	
 	public void importData(String file_path) {

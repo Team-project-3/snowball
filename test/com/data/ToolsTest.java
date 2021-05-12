@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +21,16 @@ class ToolsTest {
 	}
 
 	@Test
-	void testDownloadData() {
+	void testDownloadData() throws InterruptedException {
 		Tools t = new Tools(null);
-		int num1=t.downloadData("SZ002353");
-		assertEquals(1, num1);
+		t.downloadData("SZ002353");
+		t.downloadData("SH600415");
+		TimeUnit.SECONDS.sleep(30);
+		t.getDownloading("1");
+		//int num1= 
+		//int num2
+		//assertEquals(1, num1);
+		//assertEquals(1, num2);
 	}
 
 	@Test
