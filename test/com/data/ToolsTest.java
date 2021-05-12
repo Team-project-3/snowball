@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,11 +44,6 @@ class ToolsTest {
 
 	@Test
 	void testAddLabel() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveLabel() {
 		DataBank db = new DataBank();
 		Label l1=new Label();
 		l1.setId(0);
@@ -55,9 +51,25 @@ class ToolsTest {
 		l1.getOptions().add("hello");
 		l1.getOptions().add("why");
 		db.addLabel(l1);
+		
+		assertEquals(db.getLabelList().get(0).getId(),0);
+		assertEquals(db.getLabelList().get(0).getContent(),"第一个标签");
+		assertEquals(db.getLabelList().get(0).getOptions().get(0),"hello");
+		assertEquals(db.getLabelList().get(0).getOptions().get(1),"why");
+	}
+
+	@Test
+	void testRemoveLabel() {
+		DataBank db = new DataBank();
+		Label l1=new Label();
+		l1.setId(0);
+		l1.setContent("绗竴涓爣绛�");
+		l1.getOptions().add("hello");
+		l1.getOptions().add("why");
+		db.addLabel(l1);
 		Label l2=new Label();
 		l2.setId(1);
-		l2.setContent("第二个标签");
+		l2.setContent("绗簩涓爣绛�");
 		l2.getOptions().add("what");
 		l2.getOptions().add("and you");
 		db.addLabel(l2);
@@ -87,20 +99,20 @@ class ToolsTest {
 		
 		Label l1 = new Label();
 		l1.setContent("label 1");
-		l1.getOptions().add("鏄�");
-		l1.getOptions().add("鍚�");
-
+		l1.getOptions().add("是");
+		l1.getOptions().add("否");
 		c1.getLabelList().add(1);
 				
 		db.addComment(c1);
 		db.addLabel(l1);
 		
 		Tools tools = new Tools(db);
-		ArrayList<Integer> result = tools.analyse(l1);
+		Map<Label, ArrayList<Integer>> table = tools.analyse();
 		
-		assertEquals(result.get(0), 0);
-		assertEquals(result.get(1), 1);
-		assertEquals(result.size(), 2);
+		assertEquals(table.get(l1).get(0), 0);
+		assertEquals(table.get(l1).get(1), 1);
+		assertEquals(table.get(l1).size(), 2);
+		assertEquals(table.size(), 1);
 	}
 
 }
