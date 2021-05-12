@@ -14,7 +14,7 @@ public class Label {
 
     public Label(int id, String content, ArrayList<String> options) {
         this.id = id;
-        this.name = content;
+        this.content = content;
         this.options = options;
     }
 
@@ -26,12 +26,12 @@ public class Label {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getContent() {
+        return content;
     }
 
-    public void setName(String content) {
-        this.name = content;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public ArrayList<String> getOptions() {

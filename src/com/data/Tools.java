@@ -36,7 +36,7 @@ public class Tools {
 	}
 	
 	public ArrayList<Integer> analyse(Label analyseLabel) {
-		ArrayList<Comment> comments = this.db.getCommentArrayList();
+		ArrayList<Comment> comments = this.db.getCommentList();
 		ArrayList<Label> labels = this.db.getLabelList();
 		int index = labels.indexOf(analyseLabel);
 		
@@ -48,7 +48,7 @@ public class Tools {
 		
 		// 统计
 		for(Comment comment : comments) {
-			ArrayList<Integer> arrayList = comment.getLabelArrayList();
+			ArrayList<Integer> arrayList = comment.getLabelList();
 			int option = arrayList.get(index);
 			label_sum.set(option, label_sum.get(option)+1);
 		}
