@@ -19,7 +19,8 @@ class ToolsTest {
 
 	@Test
 	void testDownloadData() {
-		num1 = downloadData(SH600415);
+		Tools t = new Tools(null);
+		int num1=t.downloadData("SH600415");
 		assertEquals(1, num1);
 	}
 

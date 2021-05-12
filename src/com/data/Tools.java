@@ -12,6 +12,12 @@ public class Tools {
 	public int downloadData(String ID) {
 		Manager t1 = new Manager(ID);
 		t1.start();
+		try {
+			t1.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return t1.getResult();
 		
 	}
