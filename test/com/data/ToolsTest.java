@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,11 +70,12 @@ class ToolsTest {
 		db.addLabel(l1);
 		
 		Tools tools = new Tools(db);
-		ArrayList<Integer> result = tools.analyse(l1);
+		Map<Label, ArrayList<Integer>> table = tools.analyse();
 		
-		assertEquals(result.get(0), 0);
-		assertEquals(result.get(1), 1);
-		assertEquals(result.size(), 2);
+		assertEquals(table.get(l1).get(0), 0);
+		assertEquals(table.get(l1).get(1), 1);
+		assertEquals(table.get(l1).size(), 2);
+		assertEquals(table.size(), 1);
 	}
 
 }
