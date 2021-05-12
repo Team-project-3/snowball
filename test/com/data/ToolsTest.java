@@ -44,7 +44,18 @@ class ToolsTest {
 
 	@Test
 	void testAddLabel() {
-		fail("Not yet implemented");
+		DataBank db = new DataBank();
+		Label l1=new Label();
+		l1.setId(0);
+		l1.setContent("µÚÒ»¸ö±êÇ©");
+		l1.getOptions().add("hello");
+		l1.getOptions().add("why");
+		db.addLabel(l1);
+		
+		assertEquals(db.getLabelList().get(0).getId(),0);
+		assertEquals(db.getLabelList().get(0).getContent(),"µÚÒ»¸ö±êÇ©");
+		assertEquals(db.getLabelList().get(0).getOptions().get(0),"hello");
+		assertEquals(db.getLabelList().get(0).getOptions().get(1),"why");
 	}
 
 	@Test
@@ -61,8 +72,8 @@ class ToolsTest {
 		
 		Label l1 = new Label();
 		l1.setContent("label 1");
-		l1.getOptions().add("æ˜¯");
-		l1.getOptions().add("å¦");
+		l1.getOptions().add("ÊÇ");
+		l1.getOptions().add("·ñ");
 
 		c1.getLabelList().add(1);
 				

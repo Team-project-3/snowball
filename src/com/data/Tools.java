@@ -38,7 +38,7 @@ public class Tools {
 	}
 	
 	public void addLabel(Label label) {
-		
+		return;
 	}
 
 	public void removeLabel(Label label) {
