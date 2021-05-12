@@ -2,7 +2,6 @@ package com.data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.Label;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterEach;
@@ -57,19 +56,21 @@ class ToolsTest {
 		c1.setContent("comment 1");
 		
 		Label l1 = new Label();
-		l1.setName("label 1");
-		l1.getOptions().add("鏄�");
-		l1.getOptions().add("鍚�");
+		l1.setContent("label 1");
+		l1.getOptions().add("是");
+		l1.getOptions().add("否");
 
-		c1.getLabelList().add(l1);
+		c1.getLabelList().add(1);
 				
-		db.addComment();
+		db.addComment(c1);
+		db.addLabel(l1);
 		
 		Tools tools = new Tools(db);
 		ArrayList<Integer> result = tools.analyse(l1);
 		
-		assertEquals(result.get(0), 1);
-		assertEquals(result.size(), 1);
+		assertEquals(result.get(0), 0);
+		assertEquals(result.get(1), 1);
+		assertEquals(result.size(), 2);
 	}
 
 }
