@@ -33,8 +33,6 @@ class AddLabelDialogTest {
 		  array.add("world");
 		Label expecteds = new Label(0,ceshi,array);
 		Assert.assertEquals(ceshi,labeltest.getContent());
-		
-		fail("Not yet implemented");
 	}
 
 }
