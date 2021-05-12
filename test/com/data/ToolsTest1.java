@@ -2,9 +2,14 @@ package com.data;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 public class ToolsTest1 {
 
@@ -32,7 +37,7 @@ public class ToolsTest1 {
 	}
 
 	@Test
-	public void testExportData() {
+	public void testExportData() throws RowsExceededException, WriteException, IOException {
 		fail("Not yet implemented");
 	}
 

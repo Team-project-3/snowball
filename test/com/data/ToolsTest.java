@@ -3,11 +3,15 @@ package com.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 class ToolsTest {
 
@@ -37,8 +41,11 @@ class ToolsTest {
 	}
 
 	@Test
-	void testExportData() {
-		fail("Not yet implemented");
+	void testExportData() throws RowsExceededException, WriteException, IOException {	
+		String dir = "D:\\Documents\\xueqiu\\data";
+		String filename = "commentData.xls";
+		Tools tool =new Tools(null);
+	    tool.exportData(dir, filename);
 	}
 
 	@Test
@@ -58,10 +65,10 @@ class ToolsTest {
 		Comment c1 = new Comment();
 		c1.setContent("comment 1");
 		
-		Label l1 = new Label();
+		com.data.Label l1 = new com.data.Label();
 		l1.setContent("label 1");
-		l1.getOptions().add("是");
-		l1.getOptions().add("否");
+		l1.getOptions().add("鏄�");
+		l1.getOptions().add("鍚�");
 
 		c1.getLabelList().add(1);
 				

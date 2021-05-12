@@ -15,6 +15,7 @@ public class AddLabelDialog {
 	
 	// 该方法获得要添加的标签的信息
 	public Label getLabel() {
+		return null;
 		
 	}
 	
