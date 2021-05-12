@@ -13,7 +13,7 @@ import java.io.File;
 import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
 public class MaintainFrame {
-    private JFrame maintainFrame = new JFrame("数据维护者");
+    public static JFrame maintainFrame = new JFrame("数据维护者");
 
     public void buildFrame() {
         //1.设置maintainFrame参数
@@ -367,54 +367,15 @@ public class MaintainFrame {
     private class AddActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            //1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"统计分析");
-            jDialog.setBounds(600,250,300,400);
+  
+        	AddLabelDialog.show();
             
+           
+           
 
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,100);
-            jPanel.setLayout(new FlowLayout());
-            JTextField labelName = new JTextField(20);
-            labelName.setLocation(5,10);
-            labelName.setHorizontalAlignment(JTextField.LEFT);
             
-            JTextArea labelAtt = new JTextArea();
-            labelAtt.setLocation(5,10);
-            labelAtt.setLineWrap(true);
-            JScrollPane jspane1=new JScrollPane(labelAtt);
-
-            jPanel.add(labelName);
-            jPanel.add(jspane1);
-
-            JPanel jp2 = new JPanel();
-            jp2.setSize(300,100);
-            JButton yes = new JButton("添加");
-            yes.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            JButton cancel = new JButton("取消");
-            cancel.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
+           
             
-            JPanel jp1 = new JPanel();
-            jp1.setSize(300,400);
-            jp2.add(yes);
-            jp2.add(cancel);
-            jp1.add(jPanel);
-            jp1.add(jp2);
-            jDialog.add(jp1);
-            
-            jDialog.setVisible(true);
         
         }
     }
