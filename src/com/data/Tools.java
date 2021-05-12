@@ -1,5 +1,6 @@
 package com.data;
 
+import manager.Manager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,12 +12,21 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public void downloadData(String ID) {
+	public int downloadData(String ID) {
+		Manager t1 = new Manager(ID);
+		t1.start();
+		try {
+			t1.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return t1.getResult();
 		
 	}
 	
 	public void getDownloading(String ID) {
-		
+		System.out.println(downloadData(ID));
 	}
 	
 	public void importData(String file_path) {

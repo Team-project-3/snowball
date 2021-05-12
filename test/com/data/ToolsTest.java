@@ -1,5 +1,6 @@
 package com.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -20,7 +21,9 @@ class ToolsTest {
 
 	@Test
 	void testDownloadData() {
-		fail("Not yet implemented");
+		Tools t = new Tools(null);
+		int num1=t.downloadData("SH600415");
+		assertEquals(1, num1);
 	}
 
 	@Test
