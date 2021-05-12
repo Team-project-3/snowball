@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="lib" path="E:/学习/团队项目开发/新建文件夹/snowball/jxl.jar">
+	<classpathentry kind="lib" path="./jxl.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
