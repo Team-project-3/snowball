@@ -27,6 +27,10 @@ public class DataBank {
     	return labelList;
     }
     
+    public void setLabelList(ArrayList<Label> labelList) {
+    	this.labelList=labelList;
+    }
+    
     public boolean addLabel(Label label) {
     	return labelList.add(label);
     }

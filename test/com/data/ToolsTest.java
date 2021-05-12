@@ -47,20 +47,47 @@ class ToolsTest {
 		DataBank db = new DataBank();
 		Label l1=new Label();
 		l1.setId(0);
-		l1.setContent("µÚÒ»¸ö±êÇ©");
+		l1.setContent("ç¬¬ä¸€ä¸ªæ ‡ç­¾");
 		l1.getOptions().add("hello");
 		l1.getOptions().add("why");
 		db.addLabel(l1);
 		
 		assertEquals(db.getLabelList().get(0).getId(),0);
-		assertEquals(db.getLabelList().get(0).getContent(),"µÚÒ»¸ö±êÇ©");
+		assertEquals(db.getLabelList().get(0).getContent(),"ç¬¬ä¸€ä¸ªæ ‡ç­¾");
 		assertEquals(db.getLabelList().get(0).getOptions().get(0),"hello");
 		assertEquals(db.getLabelList().get(0).getOptions().get(1),"why");
 	}
 
 	@Test
 	void testRemoveLabel() {
-		fail("Not yet implemented");
+		DataBank db = new DataBank();
+		Label l1=new Label();
+		l1.setId(0);
+		l1.setContent("ç»—îƒ¿ç«´æ¶“î…çˆ£ç»›ï¿½");
+		l1.getOptions().add("hello");
+		l1.getOptions().add("why");
+		db.addLabel(l1);
+		Label l2=new Label();
+		l2.setId(1);
+		l2.setContent("ç»—îƒ¿ç°©æ¶“î…çˆ£ç»›ï¿½");
+		l2.getOptions().add("what");
+		l2.getOptions().add("and you");
+		db.addLabel(l2);
+		db.removeLabel(l1);
+		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
+			assertNotEquals(db.getLabelList().get(i).getId(),l1.getId());
+			assertNotEquals(db.getLabelList().get(i).getContent(),l1.getContent());
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l1.getOptions().get(0));
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l1.getOptions().get(1));
+		}
+		db.addLabel(l1);
+		db.removeLabel(l2);
+		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
+			assertNotEquals(db.getLabelList().get(i).getId(),l2.getId());
+			assertNotEquals(db.getLabelList().get(i).getContent(),l2.getContent());
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l2.getOptions().get(0));
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l2.getOptions().get(1));
+		}
 	}
 
 	@Test
@@ -72,9 +99,8 @@ class ToolsTest {
 		
 		Label l1 = new Label();
 		l1.setContent("label 1");
-		l1.getOptions().add("ÊÇ");
-		l1.getOptions().add("·ñ");
-
+		l1.getOptions().add("æ˜¯");
+		l1.getOptions().add("å¦");
 		c1.getLabelList().add(1);
 				
 		db.addComment(c1);
