@@ -42,7 +42,15 @@ public class Tools {
 	}
 
 	public void removeLabel(Label label) {
-		
+		ArrayList<Label> list = new ArrayList<>();
+		list=db.getLabelList();
+		if(list!=null) {
+			list.remove(label);
+		}
+		else {
+			System.out.println("标签列表中没有这个标签对象！");
+		}
+		db.setLabelList(list);
 	}
 	
 	public ArrayList<Integer> analyse(Label analyseLabel) {
