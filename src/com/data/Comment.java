@@ -35,11 +35,12 @@ public class Comment {
                 '}';
     }
 
+
     public ArrayList<Integer> getLabelList() {
         return labelList;
     }
 
-//    public void setLabelArrayList(ArrayList<Int> labelArrayList) {
-//        this.labelArrayList = labelArrayList;
-//    }
+    public void setLabelArrayList(ArrayList<Integer> labelArrayList) {
+        this.labelList = labelArrayList;
+    }
 }
