@@ -61,32 +61,50 @@ class ToolsTest {
 	@Test
 	void testRemoveLabel() {
 		DataBank db = new DataBank();
+		Tools tool = new Tools(db);
+		
+		Comment comment = new Comment();
+		comment.setId(0);
+		comment.setContent("第一个评论");
+		ArrayList<Integer> list = new ArrayList<>();
+		list.add(1);
+		list.add(2);
+		comment.setLabelArrayList(list);
+		ArrayList<Comment> com = new ArrayList<>();
+		com.add(comment);
+		db.setCommentList(com);
+		
 		Label l1=new Label();
 		l1.setId(0);
-		l1.setContent("绗竴涓爣绛�");
-		l1.getOptions().add("hello");
-		l1.getOptions().add("why");
-		db.addLabel(l1);
+		l1.setContent("第一个标签");
+		ArrayList<String> options = new ArrayList<>();
+		options=l1.getOptions();
+		options.add("hello");
+		options.add("why");
+		l1.setOptions(options);
+		
 		Label l2=new Label();
 		l2.setId(1);
-		l2.setContent("绗簩涓爣绛�");
-		l2.getOptions().add("what");
-		l2.getOptions().add("and you");
-		db.addLabel(l2);
-		db.removeLabel(l1);
+		l2.setContent("第二个标签");
+		ArrayList<String> options_1 = new ArrayList<>();
+		options_1=l2.getOptions();
+		options_1.add("what");
+		options_1.add("and you");
+		l2.setOptions(options_1);
+		ArrayList<Label> lab = new ArrayList<>();
+		lab.add(l1);
+		lab.add(l2);
+		db.setLabelList(lab);
+		
+		tool.removeLabel(l1);
 		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
 			assertNotEquals(db.getLabelList().get(i).getId(),l1.getId());
 			assertNotEquals(db.getLabelList().get(i).getContent(),l1.getContent());
 			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l1.getOptions().get(0));
 			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l1.getOptions().get(1));
 		}
-		db.addLabel(l1);
-		db.removeLabel(l2);
-		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
-			assertNotEquals(db.getLabelList().get(i).getId(),l2.getId());
-			assertNotEquals(db.getLabelList().get(i).getContent(),l2.getContent());
-			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l2.getOptions().get(0));
-			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l2.getOptions().get(1));
+		for(int i = 0 ; i < db.getCommentList().get(0).getLabelList().size() ; i++) {
+			assertNotEquals(db.getCommentList().get(0).getLabelList().get(i),1);
 		}
 	}
 
