@@ -38,7 +38,20 @@ public class Tools {
 	}
 	
 	public void addLabel(Label label) {
-		return;
+		ArrayList<Label> list = new ArrayList<>();
+		list = db.getLabelList();
+		list.add(label);
+		db.setLabelList(list);
+		
+		ArrayList<Integer> list_1 = new ArrayList<>();
+		ArrayList<Comment> list_2 = new ArrayList<>();
+		list_2=db.getCommentList();
+		for(int i = 0 ; i < list_2.size() ; i++) {
+			list_1=list_2.get(i).getLabelList();
+			list_1.add(-1);
+			list_2.get(i).setLabelArrayList(list_1);
+		}
+		db.setCommentList(list_2);
 	}
 
 	public void removeLabel(Label label) {
