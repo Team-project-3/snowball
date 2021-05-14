@@ -93,7 +93,7 @@ public class Tools {
 		
 		for(int i =0;i<commentList.size();i++){ 
 			for(int j=0;j<labelList.size();j++) { 
-				Label labelContent = new Label(j+1,i+1,labelList.get(i).getOptions().get(commentList.get(i).getLabelList().get(j) ));
+				Label labelContent = new Label(j+1,i+1,labelList.get(j).getOptions().get(commentList.get(i).getLabelList().get(j) ));
 				ws.addCell((WritableCell) labelContent); 
 			} 
 		}
@@ -103,7 +103,7 @@ public class Tools {
 	}
 	
 	public void addLabel(Label label) {
-		
+		return;
 	}
 
 	public void removeLabel(Label label) {

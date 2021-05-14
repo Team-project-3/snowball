@@ -50,7 +50,18 @@ class ToolsTest {
 
 	@Test
 	void testAddLabel() {
-		fail("Not yet implemented");
+		DataBank db = new DataBank();
+		Label l1=new Label();
+		l1.setId(0);
+		l1.setContent("第一个标签");
+		l1.getOptions().add("hello");
+		l1.getOptions().add("why");
+		db.addLabel(l1);
+		
+		assertEquals(db.getLabelList().get(0).getId(),0);
+		assertEquals(db.getLabelList().get(0).getContent(),"第一个标签");
+		assertEquals(db.getLabelList().get(0).getOptions().get(0),"hello");
+		assertEquals(db.getLabelList().get(0).getOptions().get(1),"why");
 	}
 
 	@Test
@@ -67,8 +78,13 @@ class ToolsTest {
 		
 		com.data.Label l1 = new com.data.Label();
 		l1.setContent("label 1");
+<<<<<<< HEAD
 		l1.getOptions().add("閺勶拷");
 		l1.getOptions().add("閸氾拷");
+=======
+		l1.getOptions().add("是");
+		l1.getOptions().add("否");
+>>>>>>> 79857c4ecc88080705134fda40b95ddca8c6966d
 
 		c1.getLabelList().add(1);
 				

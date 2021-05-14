@@ -5,10 +5,16 @@ import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.data.Tools;
+
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
@@ -162,55 +168,8 @@ public class MaintainFrame {
     private class ExportActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-        	//1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"数据导入");
-            jDialog.setBounds(600,250,300,200);
-            
-
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,200);
-            JTextField filePath = new JTextField(20);
-            filePath.setLocation(5,10);
-            filePath.setHorizontalAlignment(JTextField.LEFT);
-
-            jPanel.add(filePath);
-
-            JButton jButton = new JButton("导出");
-            jButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JFileChooser jf = new JFileChooser();
-                    jf.showOpenDialog(maintainFrame);//显示打开的文件对话框
-                    File f =  jf.getSelectedFile();//使用文件类获取选择器选择的文件
-                    if(f==null){
-                        return;
-                    }
-                    String s = f.getAbsolutePath();//返回路径名
-                    filePath.setText(s);
-                }
-            });
-            JButton yes = new JButton("确定");
-            yes.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            JButton cancel = new JButton("取消");
-            cancel.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            jPanel.add(jButton);
-            jPanel.add(yes);
-            jPanel.add(cancel);
-            jDialog.add(jPanel);
-            
-            jDialog.setVisible(true);
+        	ExportDialog ed = new ExportDialog(maintainFrame);
+        	ed.show();
         }
     }
     
