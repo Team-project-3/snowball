@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,12 +51,50 @@ class ToolsTest {
 
 	@Test
 	void testAddLabel() {
-		fail("Not yet implemented");
+		DataBank db = new DataBank();
+		Label l1=new Label();
+		l1.setId(0);
+		l1.setContent("第一个标签");
+		l1.getOptions().add("hello");
+		l1.getOptions().add("why");
+		db.addLabel(l1);
+		
+		assertEquals(db.getLabelList().get(0).getId(),0);
+		assertEquals(db.getLabelList().get(0).getContent(),"第一个标签");
+		assertEquals(db.getLabelList().get(0).getOptions().get(0),"hello");
+		assertEquals(db.getLabelList().get(0).getOptions().get(1),"why");
 	}
 
 	@Test
 	void testRemoveLabel() {
-		fail("Not yet implemented");
+		DataBank db = new DataBank();
+		Label l1=new Label();
+		l1.setId(0);
+		l1.setContent("绗竴涓爣绛�");
+		l1.getOptions().add("hello");
+		l1.getOptions().add("why");
+		db.addLabel(l1);
+		Label l2=new Label();
+		l2.setId(1);
+		l2.setContent("绗簩涓爣绛�");
+		l2.getOptions().add("what");
+		l2.getOptions().add("and you");
+		db.addLabel(l2);
+		db.removeLabel(l1);
+		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
+			assertNotEquals(db.getLabelList().get(i).getId(),l1.getId());
+			assertNotEquals(db.getLabelList().get(i).getContent(),l1.getContent());
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l1.getOptions().get(0));
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l1.getOptions().get(1));
+		}
+		db.addLabel(l1);
+		db.removeLabel(l2);
+		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
+			assertNotEquals(db.getLabelList().get(i).getId(),l2.getId());
+			assertNotEquals(db.getLabelList().get(i).getContent(),l2.getContent());
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l2.getOptions().get(0));
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l2.getOptions().get(1));
+		}
 	}
 
 	@Test
@@ -69,18 +108,18 @@ class ToolsTest {
 		l1.setContent("label 1");
 		l1.getOptions().add("是");
 		l1.getOptions().add("否");
-
 		c1.getLabelList().add(1);
 				
 		db.addComment(c1);
 		db.addLabel(l1);
 		
 		Tools tools = new Tools(db);
-		ArrayList<Integer> result = tools.analyse(l1);
+		Map<Label, ArrayList<Integer>> table = tools.analyse();
 		
-		assertEquals(result.get(0), 0);
-		assertEquals(result.get(1), 1);
-		assertEquals(result.size(), 2);
+		assertEquals(table.get(l1).get(0), 0);
+		assertEquals(table.get(l1).get(1), 1);
+		assertEquals(table.get(l1).size(), 2);
+		assertEquals(table.size(), 1);
 	}
 
 }

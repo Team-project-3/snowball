@@ -34,32 +34,44 @@ public class Tools {
 	}
 	
 	public void addLabel(Label label) {
-		
+		return;
 	}
 
 	public void removeLabel(Label label) {
-		
+		ArrayList<Label> list = new ArrayList<>();
+		list=db.getLabelList();
+		if(list!=null) {
+			list.remove(label);
+		}
+		else {
+			System.out.println("标签列表中没有这个标签对象！");
+		}
+		db.setLabelList(list);
 	}
 	
-	public ArrayList<Integer> analyse(Label analyseLabel) {
+	public Map<Label, ArrayList<Integer>> analyse() {
+		Map<Label, ArrayList<Integer>> table = new HashMap<>();
 		ArrayList<Comment> comments = this.db.getCommentList();
 		ArrayList<Label> labels = this.db.getLabelList();
-		int index = labels.indexOf(analyseLabel);
 		
-		// 鍒濆鍖杔abel_sum
-		ArrayList<Integer> label_sum = new ArrayList<>();
-		for(int i=0; i < analyseLabel.getOptions().size(); ++i) {
-			label_sum.add(0);
+		int size = labels.size();
+		for (int i=0; i<size; ++i) {
+			// 鍒濆鍖杔abelSum
+			ArrayList<Integer> labelSum = new ArrayList<>();
+			int len = labels.get(i).getOptions().size();
+			for(int j=0; j < len; ++j) {
+				labelSum.add(0);
+			}
+			
+			// 缁熻
+			for (Comment comment : comments) {
+				labelSum.set(comment.getLabelList().get(i), labelSum.get(comment.getLabelList().get(i))+1);
+			}
+			
+			table.put(labels.get(i), labelSum);
 		}
 		
-		// 缁熻
-		for(Comment comment : comments) {
-			ArrayList<Integer> arrayList = comment.getLabelList();
-			int option = arrayList.get(index);
-			label_sum.set(option, label_sum.get(option)+1);
-		}
-		
-		return label_sum;
+		return table;
 	}
 
 }
