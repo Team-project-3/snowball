@@ -20,6 +20,10 @@ public class Manager extends Thread {
 	public Manager(String code){
         this.code = code;
         codes.add(code);
+        states.put(code,100);
+    }
+	public Manager(){
+		
     }
 	
     public void run() {
@@ -65,6 +69,9 @@ public class Manager extends Thread {
 	}
     public void printCode() {
     	System.out.println(codes);
+    }
+    public void printState() {
+    	System.out.println(states);
     }
 
     /*
