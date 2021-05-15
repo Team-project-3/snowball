@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +22,16 @@ class ToolsTest {
 	}
 
 	@Test
-	void testDownloadData() {
+	void testDownloadData() throws InterruptedException {
 		Tools t = new Tools(null);
-		int num1=t.downloadData("SH600415");
-		assertEquals(1, num1);
+		t.downloadData("SZ002353");
+		t.downloadData("SH600415");
+		TimeUnit.SECONDS.sleep(30);
+		t.getDownloading("1");
+		//int num1= 
+		//int num2
+		//assertEquals(1, num1);
+		//assertEquals(1, num2);
 	}
 
 	@Test
@@ -48,10 +56,10 @@ class ToolsTest {
 		Tools tool = new Tools(db);
 		Comment comment = new Comment();
 		comment.setId(0);
-		comment.setContent("µÚÒ»¸öÆÀÂÛ");
+		comment.setContent("ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		Comment comment_1 = new Comment();
 		comment_1.setId(1);
-		comment_1.setContent("µÚ¶ş¸öÆÀÂÛ");
+		comment_1.setContent("ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		
 		ArrayList<Comment> list = new ArrayList<>();
 		list.add(comment);
@@ -60,7 +68,7 @@ class ToolsTest {
 		
 		Label l1=new Label();
 		l1.setId(0);
-		l1.setContent("µÚÒ»¸ö±êÇ©");
+		l1.setContent("ç¬¬ä¸€ä¸ªæ ‡ç­¾");
 		ArrayList<String> options= new ArrayList<>();
 		options=l1.getOptions();
 		options.add("hello");
@@ -69,22 +77,49 @@ class ToolsTest {
 		tool.addLabel(l1);
 		
 		assertEquals(db.getLabelList().get(0).getId(),0);
-		assertEquals(db.getLabelList().get(0).getContent(),"µÚÒ»¸ö±êÇ©");
+		assertEquals(db.getLabelList().get(0).getContent(),"ç¬¬ä¸€ä¸ªæ ‡ç­¾");
 		assertEquals(db.getLabelList().get(0).getOptions().get(0),"hello");
 		assertEquals(db.getLabelList().get(0).getOptions().get(1),"why");
 		
 		
 		assertEquals(db.getCommentList().get(0).getId(),0);
 		assertEquals(db.getCommentList().get(1).getId(),1);
-		assertEquals(db.getCommentList().get(0).getContent(),"µÚÒ»¸öÆÀÂÛ");
-		assertEquals(db.getCommentList().get(1).getContent(),"µÚ¶ş¸öÆÀÂÛ");
+		assertEquals(db.getCommentList().get(0).getContent(),"ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+		assertEquals(db.getCommentList().get(1).getContent(),"ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		assertEquals(db.getCommentList().get(0).getLabelList().get(0),-1);
 		assertEquals(db.getCommentList().get(1).getLabelList().get(0),-1);
 	}
 
 	@Test
 	void testRemoveLabel() {
-		fail("Not yet implemented");
+		DataBank db = new DataBank();
+		Label l1=new Label();
+		l1.setId(0);
+		l1.setContent("ç»—îƒ¿ç«´æ¶“î…çˆ£ç»›ï¿½");
+		l1.getOptions().add("hello");
+		l1.getOptions().add("why");
+		db.addLabel(l1);
+		Label l2=new Label();
+		l2.setId(1);
+		l2.setContent("ç»—îƒ¿ç°©æ¶“î…çˆ£ç»›ï¿½");
+		l2.getOptions().add("what");
+		l2.getOptions().add("and you");
+		db.addLabel(l2);
+		db.removeLabel(l1);
+		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
+			assertNotEquals(db.getLabelList().get(i).getId(),l1.getId());
+			assertNotEquals(db.getLabelList().get(i).getContent(),l1.getContent());
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l1.getOptions().get(0));
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l1.getOptions().get(1));
+		}
+		db.addLabel(l1);
+		db.removeLabel(l2);
+		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
+			assertNotEquals(db.getLabelList().get(i).getId(),l2.getId());
+			assertNotEquals(db.getLabelList().get(i).getContent(),l2.getContent());
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l2.getOptions().get(0));
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l2.getOptions().get(1));
+		}
 	}
 
 	@Test
@@ -96,20 +131,20 @@ class ToolsTest {
 		
 		Label l1 = new Label();
 		l1.setContent("label 1");
-		l1.getOptions().add("ÊÇ");
-		l1.getOptions().add("·ñ");
-
+		l1.getOptions().add("æ˜¯");
+		l1.getOptions().add("å¦");
 		c1.getLabelList().add(1);
 				
 		db.addComment(c1);
 		db.addLabel(l1);
 		
 		Tools tools = new Tools(db);
-		ArrayList<Integer> result = tools.analyse(l1);
+		Map<Label, ArrayList<Integer>> table = tools.analyse();
 		
-		assertEquals(result.get(0), 0);
-		assertEquals(result.get(1), 1);
-		assertEquals(result.size(), 2);
+		assertEquals(table.get(l1).get(0), 0);
+		assertEquals(table.get(l1).get(1), 1);
+		assertEquals(table.get(l1).size(), 2);
+		assertEquals(table.size(), 1);
 	}
 
 }

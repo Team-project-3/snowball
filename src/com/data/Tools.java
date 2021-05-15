@@ -12,21 +12,17 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public int downloadData(String ID) {
-		Manager t1 = new Manager(ID);
-		t1.start();
-		try {
-			t1.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return t1.getResult();
+	public void downloadData(String ID) {
+		Manager t = new Manager(ID);
+		t.start();
+		//return t.getResult();
 		
 	}
 	
 	public void getDownloading(String ID) {
-		System.out.println(downloadData(ID));
+		Manager t = new Manager();
+		t.printCode();
+		t.printState();
 	}
 	
 	public void importData(String file_path) {
@@ -55,28 +51,40 @@ public class Tools {
 	}
 
 	public void removeLabel(Label label) {
-		
+		ArrayList<Label> list = new ArrayList<>();
+		list=db.getLabelList();
+		if(list!=null) {
+			list.remove(label);
+		}
+		else {
+			System.out.println("标签列表中没有这个标签对象！");
+		}
+		db.setLabelList(list);
 	}
 	
-	public ArrayList<Integer> analyse(Label analyseLabel) {
+	public Map<Label, ArrayList<Integer>> analyse() {
+		Map<Label, ArrayList<Integer>> table = new HashMap<>();
 		ArrayList<Comment> comments = this.db.getCommentList();
 		ArrayList<Label> labels = this.db.getLabelList();
-		int index = labels.indexOf(analyseLabel);
 		
-		// 鍒濆鍖杔abel_sum
-		ArrayList<Integer> label_sum = new ArrayList<>();
-		for(int i=0; i < analyseLabel.getOptions().size(); ++i) {
-			label_sum.add(0);
+		int size = labels.size();
+		for (int i=0; i<size; ++i) {
+			// 鍒濆鍖杔abelSum
+			ArrayList<Integer> labelSum = new ArrayList<>();
+			int len = labels.get(i).getOptions().size();
+			for(int j=0; j < len; ++j) {
+				labelSum.add(0);
+			}
+			
+			// 缁熻
+			for (Comment comment : comments) {
+				labelSum.set(comment.getLabelList().get(i), labelSum.get(comment.getLabelList().get(i))+1);
+			}
+			
+			table.put(labels.get(i), labelSum);
 		}
 		
-		// 缁熻
-		for(Comment comment : comments) {
-			ArrayList<Integer> arrayList = comment.getLabelList();
-			int option = arrayList.get(index);
-			label_sum.set(option, label_sum.get(option)+1);
-		}
-		
-		return label_sum;
+		return table;
 	}
 
 }
