@@ -44,25 +44,14 @@ public class ManagerTest {
 	
 
 	@Test
-	public void testManager() {
+	public void testManager() throws InterruptedException {
 
 		Manager t1 = new Manager(code[0]);
 		Manager t2 = new Manager(code[1]);
 		t1.start();
 		t2.start();
-		
-		try {
-			//t1.join();
-			t2.join();
-			TimeUnit.SECONDS.sleep(1);
-            t1.pauseThread();
-            TimeUnit.SECONDS.sleep(10);
-            t1.resumeThread();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		TimeUnit.SECONDS.sleep(30);
+
 		int num1 = t1.getResult();
 		int num2 = t2.getResult();
 		//System.out.println(code[0]+" "+num1);
