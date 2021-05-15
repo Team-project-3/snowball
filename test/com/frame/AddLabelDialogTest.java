@@ -1,14 +1,10 @@
 package com.frame;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.ArrayList;
-
+import java.awt.Frame;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.frame.*;
 import com.data.Label;
 
 class AddLabelDialogTest {
@@ -23,20 +19,23 @@ class AddLabelDialogTest {
 
 	@Test
 	void testShow() {
-		fail("Not yet implemented");
+		AddLabelDialog dialog = new AddLabelDialog();
+		Frame frame = new Frame();
+		
+		dialog.show(frame);
 	}
 
 	@Test
 	void testGetLabel() {
 		AddLabelDialog dialog = new AddLabelDialog();
-		dialog.show(null);
+		Frame frame = new Frame();
+		
+		dialog.show(frame);
+		
 		Label labeltest = dialog.getLabel();
-		String ceshi="测试";
-		ArrayList<String> array=new ArrayList<String>();
-		array.add("hello");
-		array.add("world");
-		Label expecteds = new Label(0,ceshi,array);
-		Assert.assertEquals(ceshi, labeltest.getContent());
+		Assert.assertEquals("测试", labeltest.getContent());
+		Assert.assertEquals("hello", labeltest.getOptions().get(0));
+		Assert.assertEquals("world", labeltest.getOptions().get(1));
 	}
 
 }

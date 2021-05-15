@@ -1,101 +1,87 @@
 package com.frame;
 
-import java.awt.Container;
-import java.awt.Dialog.ModalityType;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import com.data.Label;
 
 public class AddLabelDialog {
 	private Label label;
-	String labelContent;
+    private JDialog jDialog;
+    private JButton yes;
 	
 	public AddLabelDialog() {
-        label = new Label();
 	}
 
 	// 该方法显示对话框
 	public void show(Frame maintainFrame) {
 		  //1.弹出对话框
-        JDialog jDialog;
-
-		jDialog = new JDialog(maintainFrame,"添加标签",true);
-        jDialog.setBounds(600,250,300,400);
+		jDialog = new JDialog(maintainFrame, "添加标签", true);
+        jDialog.setBounds(600,250,300,300);
         
 
         //2.设置对话框面板内容
-        JPanel jPanel = new JPanel();
-   
-        jPanel.setSize(300,300);
-        jPanel.setLayout(null);
-   
-        JTextField labelName = new JTextField(10);
-        labelName.setLocation(5,10);
+        // 给标签名的jp
+        JPanel jPanel1 = new JPanel();
+        jPanel1.setSize(250, 30);
+        
+        JTextField labelName = new JTextField(20);
         labelName.setHorizontalAlignment(JTextField.LEFT);
         JLabel labName = new JLabel("标签 ");
-       
-     
-        jPanel.add(labName);
-        jPanel.add(labelName);
         
+        jPanel1.add(labName);
+        jPanel1.add(labelName);
         
-      
-       
-        JButton yes = new JButton("添加");
-       
+        // 给各项标签选项的jp
+        JPanel jPanel2 = new JPanel();
+        jPanel2.setSize(250, 200);
         
-    //    JPanel jp1 = new JPanel();
-      //  jp1.setSize(300,400);
+        JTextArea labelOptions = new JTextArea(5, 10);
+        labelOptions.setLineWrap(true);
+        labelOptions.setSize(250, 200);
+        JLabel labOptions = new JLabel("选项 ");
+        labOptions.setSize(30,30);
+//        labelOptions.setPreferredSize(new Dimension(250, 300));
         
+        jPanel2.setLayout(new FlowLayout());
+        jPanel2.add(labOptions);
+        jPanel2.add(labelOptions);
+        
+        // 按钮
+        yes = new JButton("添加");
 
-    //    jp1.add(jPanel);
-       
-       // jDialog.add(jp1);
-        jDialog.add(jPanel);
-        
-        JTextField options1= new JTextField(10);
-        JTextField options2= new JTextField(10);
-        labelName.setBounds(10, 0, 100, 50);
-        yes.setBounds(10, 50, 100, 50);
-        options1.setBounds(10, 100, 100, 50);
-        options2.setBounds(10, 150, 100, 50);
-        jPanel.add(options1);
-        jPanel.add(options2);
-        jPanel.add(yes);
-    
- 
-	    jDialog.setVisible(true);		
-	    
 	    yes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                jDialog.show(false);
-                labelContent = labelName.getText();
-                System.out.println(labelContent); 
+            	label = new Label();
+            	
+                String labelContent = labelName.getText(); 
                 label.setContent(labelContent);
-                System.out.println(label.getContent());
+
+                String options[] = labelOptions.getText().split("\n");
+                List<String> result = Arrays.asList(options);
+                label.setOptions(new ArrayList<>(result));
                 
-                String Labeloptions1 = options1.getText();
-                String Labeloptions2 = options2.getText();
-                label.getOptions().clear();
-                label.getOptions().add(Labeloptions1);
-                label.getOptions().add(Labeloptions2);
-                
-                System.out.println(label.getOptions()) ; 
+//                jDialog.setVisible(false);
+                jDialog.dispose();
             }
         });
+
+
+        jDialog.getContentPane().add(jPanel1, BorderLayout.NORTH);
+        jDialog.getContentPane().add(jPanel2, BorderLayout.CENTER);
+        jDialog.getContentPane().add(yes, BorderLayout.SOUTH);
         
+        jDialog.setVisible(true);	
 	}
 	
 	// 该方法获得要添加的标签的信息
