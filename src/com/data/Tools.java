@@ -54,10 +54,22 @@ public class Tools {
 		ArrayList<Label> list = new ArrayList<>();
 		list=db.getLabelList();
 		if(list!=null) {
+			ArrayList<Comment> list_1 = new ArrayList<>();
+			list_1=db.getCommentList();
+			ArrayList<Integer> list_2 = new ArrayList<>();
+			for(int i = 0 ; i < list.size(); i++) {
+				if(list.get(i)==label) {
+					for(int j = 0 ; j < list_1.size(); j++) {
+						list_2=list_1.get(j).getLabelList();
+						list_2.remove(i);
+						list_1.get(j).setLabelArrayList(list_2);
+					}
+				}
+			}
 			list.remove(label);
 		}
 		else {
-			System.out.println("±êÇ©ÁÐ±íÖÐÃ»ÓÐÕâ¸ö±êÇ©¶ÔÏó£¡");
+			System.out.println("æ²¡æœ‰è¿™ä¸ªæ ‡ç­¾ï¼");
 		}
 		db.setLabelList(list);
 	}
