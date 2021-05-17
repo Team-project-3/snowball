@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,22 +21,24 @@ class ToolsTest {
 	void tearDown() throws Exception {
 	}
 
-	@Test
+	//@Test
+	@Ignore
 	void testDownloadData() throws InterruptedException {
 		Tools t = new Tools(null);
 		t.downloadData("SZ002353");
 		t.downloadData("SH600415");
-		TimeUnit.SECONDS.sleep(30);
-		t.getDownloading("1");
-		//int num1= 
-		//int num2
-		//assertEquals(1, num1);
-		//assertEquals(1, num2);
+		TimeUnit.SECONDS.sleep(30);//让主线程睡个30秒，不然主线程直接结束，测试失败
+
 	}
 
 	@Test
-	void testGetDownloading() {
-		fail("Not yet implemented");
+	void testGetDownloading() throws InterruptedException {
+		Tools t = new Tools(null);
+		System.out.println(t.getDownloading());
+		t.downloadData("SZ002353");
+		System.out.println(t.getDownloading());
+		TimeUnit.SECONDS.sleep(30);//让主线程睡个30秒，不然主线程直接结束，测试失败
+		System.out.println(t.getDownloading());
 	}
 
 	@Test
