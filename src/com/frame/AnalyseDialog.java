@@ -49,9 +49,9 @@ public class AnalyseDialog{
         imageLabel = new JLabel();
 	}
 	
-	public void show(Frame frame, boolean model) {
+	public void show(Frame frame) {
         //1.弹出对话框
-        jDialog = new JDialog(frame, "统计分析", model);
+        jDialog = new JDialog(frame, "统计分析", true);
         jDialog.setBounds(600,250,picW+20,picH+100);
         
         //Box box = Box.createVerticalBox();
