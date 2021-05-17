@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
@@ -47,8 +48,10 @@ class ToolsTest {
 	}
 
 	@Test
-	void testImportData() {
-		fail("Not yet implemented");
+	void testImportData() throws BiffException, IOException {
+		String filename = "D:\\Documents\\xueqiu\\data\\commentData.xls";
+		Tools tool =new Tools(null);
+		tool.importData(filename);
 	}
 
 	@Test
