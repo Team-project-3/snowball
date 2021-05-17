@@ -19,8 +19,7 @@ public class DataBank {
     public void setCommentList(ArrayList<Comment> commentList) {
     	this.commentList = commentList;
     }
-    
-   
+  
     public boolean addComment(Comment comment) {
     	return commentList.add(comment);
     }
@@ -33,7 +32,7 @@ public class DataBank {
     	return labelList;
     }
     
-    public void  setLabelList(ArrayList<Label> labelList ) {
+    public void setLabelList(ArrayList<Label> labelList) {
     	this.labelList = labelList;
     }
     

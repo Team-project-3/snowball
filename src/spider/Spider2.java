@@ -56,6 +56,11 @@ public class Spider2 {
                 	System.out.println(code+":爬取不完整");
                 	return false;
                 }
+
+                else if(line.equals("有新的评论，重新爬取")) {
+                	System.out.println(code+":有新的评论，重新爬取");
+                	return false;
+                }
                 else if(line.equals("爬取完整")) {
                 	System.out.println(code+":爬取完整");
                 	return true;

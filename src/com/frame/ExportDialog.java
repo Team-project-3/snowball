@@ -20,6 +20,7 @@ import jxl.write.biff.RowsExceededException;
 public class ExportDialog {
 	private JDialog jDialog=null;
 	private JFrame parentFrame = null;
+
 	private JTextField filePath = null;
 
 	public ExportDialog(JFrame frame) {
@@ -27,6 +28,7 @@ public class ExportDialog {
 		//1.弹出对话框
 		parentFrame = frame;
         jDialog = new JDialog(parentFrame,"数据导出");
+
         jDialog.setBounds(600,250,300,200);
         
 
@@ -47,6 +49,7 @@ public class ExportDialog {
                 JFileChooser jf = new JFileChooser();
                 jf.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES );
                 jf.showOpenDialog(parentFrame);//显示打开的文件对话框
+
                 File f =  jf.getSelectedFile();//使用文件类获取选择器选择的文件
                 if(f==null){
                     return;

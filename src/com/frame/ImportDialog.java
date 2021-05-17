@@ -83,6 +83,7 @@ public class ImportDialog {
 		        jPanel.add(yes);
 		        jPanel.add(cancel);
 		        jDialog.add(jPanel);
+
 	}
 
 	// 调用该方法显示对话框
@@ -93,6 +94,5 @@ public class ImportDialog {
 	//使用该方法获得指定的文件路径
 	public String getFilePath() {
 		return filePath.getText();
-		
 	}
 }

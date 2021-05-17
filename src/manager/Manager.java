@@ -11,7 +11,8 @@ import spider.Spider2;
 public class Manager extends Thread {
 
 	private static List<String> codes=new ArrayList<String>();
-	private static Map<String, Integer> states = new HashMap<>();//状态 0失败 1成功
+	private static Map<String, String> states = new HashMap<>();//状态 0失败 1成功
+
 	private String code;
 	
 	private final Object lock = new Object();
@@ -20,6 +21,11 @@ public class Manager extends Thread {
 	public Manager(String code){
         this.code = code;
         codes.add(code);
+
+        states.put(code,"下载中");
+    }
+	public Manager(){
+
     }
 	
     public void run() {
@@ -40,8 +46,11 @@ public class Manager extends Thread {
                 onPause();
             }
             try {
-            	states.put(code, new Spider2().run(code));
-            	if(states.get(code)==1) break;
+
+            	if(new Spider2().run(code)==1)
+            	states.put(code, "已完成");
+            	if(states.get(code).equals("已完成")) break;
+
                 Thread.sleep(1000);
             }catch (Exception e){
                 e.printStackTrace();
@@ -53,8 +62,10 @@ public class Manager extends Thread {
         
     }
 
-    public int getResult() {
-		while(states.get(code)==100)
+
+    public String getResult() {
+		while(states.get(code).equals("下载中"))
+
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -63,8 +74,15 @@ public class Manager extends Thread {
 			}
 		return states.get(code);
 	}
-    public void printCode() {
-    	System.out.println(codes);
+
+    public List<String> getCodes() {
+    	//System.out.println(codes);
+    	return codes;
+    }
+    public Map<String, String> getStates() {
+    	//System.out.println(states);
+    	return states;
+
     }
 
     /*

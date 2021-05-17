@@ -6,6 +6,8 @@ import time
 import re
 import sys
 import io
+import os
+
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8') 
 url="https://xueqiu.com/query/v1/symbol/search/status"
@@ -64,9 +66,12 @@ def func(code):
         comment2 = pattern.sub('', result['list'][len(result['list'])-1]['text'])
         if comment1==comment2:
             print("爬取完整")
-        else:
-            print("爬取不完整")
 
+        elif sheet_old.row(rows_old-1)[2].value != maxPage:
+            print("爬取不完整")
+        else:
+            print("有新的评论，重新爬取")
+            os.remove(path)
 
 
 if __name__ == '__main__':
