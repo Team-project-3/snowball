@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Label {
     private int id;
     private String content;
-    private ArrayList<String> options;
+    private ArrayList<String> options=new  ArrayList<String>();
 
 
     public Label() {
@@ -38,8 +38,8 @@ public class Label {
         return options;
     }
 
-//    public void setOptions(ArrayList<String> options) {
-//        this.options = options;
-//    }
+    public void setOptions(ArrayList<String> options) {
+        this.options = options;
+    }
 
 }
