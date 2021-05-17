@@ -59,7 +59,7 @@ class ToolsTest {
 	@Test
 	void testAddLabel() {
 		DataBank db = new DataBank();
-		
+
 		Tools tool = new Tools(db);
 		Comment comment = new Comment();
 		comment.setId(0);
@@ -156,7 +156,7 @@ class ToolsTest {
 		
 		com.data.Label l1 = new com.data.Label();
 		l1.setContent("label 1");
-		
+    
 		l1.getOptions().add("是");
 		l1.getOptions().add("否");
 
