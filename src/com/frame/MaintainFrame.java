@@ -16,6 +16,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
@@ -26,6 +27,8 @@ public class MaintainFrame {
     private Tools tools;
     private AddLabelDialog addLabelDialog;
     private ManagerDialog managerDialog;
+    private DownloadDialog downloadDialog;
+    private AnalyseDialog analyseDialog;
 
     public void buildFrame() {
         //1.设置maintainFrame参数
@@ -48,9 +51,9 @@ public class MaintainFrame {
         //2.2向子菜单添加响应事件
         jMenuItem1.addActionListener(new ImportActionListener());
         jMenuItem2.addActionListener(new ExportActionListener());
-        jMenuItem3.addActionListener(new DownLoadActionListener());
         jMenuItem4.addActionListener(new ManagerActionListener(maintainFrame));
-        
+        jMenuItem3.addActionListener(new DownLoadActionListener(maintainFrame));
+      
         jMenuData.add(jMenuItem1);
         jMenuData.add(jMenuItem2);
         jMenuData.addSeparator();
@@ -69,7 +72,7 @@ public class MaintainFrame {
 
         //2.4.统计菜单
         JMenuItem jMenuTitle = new JMenuItem("统计");
-        jMenuTitle.addActionListener(new AnalyseActionListener());
+        jMenuTitle.addActionListener(new AnalyseActionListener(maintainFrame));
         jmb.add(jMenuTitle);
         maintainFrame.setJMenuBar(jmb);
 
@@ -180,50 +183,20 @@ public class MaintainFrame {
     }
     
     private class DownLoadActionListener implements ActionListener {
-        @Override
+    	private Frame frame;
+    	
+    	public DownLoadActionListener(Frame frame) {
+    		this.frame = frame;
+    	}
+    	@Override
         public void actionPerformed(ActionEvent e) {
-        	//1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"数据导入");
-            jDialog.setBounds(600,250,300,200);
-            
-
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,200);
-            JTextField filePath = new JTextField(20);
-            filePath.setLocation(5,10);
-            filePath.setHorizontalAlignment(JTextField.LEFT);
-
-            jPanel.add(filePath);
-
-            JButton jButton = new JButton("下载");
-            jButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    
-                }
-            });
-            JButton yes = new JButton("确定");
-            yes.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            JButton cancel = new JButton("取消");
-            cancel.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            jPanel.add(jButton);
-            jPanel.add(yes);
-            jPanel.add(cancel);
-            jDialog.add(jPanel);
-            
-            jDialog.setVisible(true);
+        	downloadDialog = new DownloadDialog();
+        	downloadDialog.show(frame);
+        	
+        	String downloadID = downloadDialog.getDownloadID();
+        	if (downloadID != null) {
+        		tools.downloadData(downloadID);
+        	}
         }
     }
     
@@ -244,32 +217,19 @@ public class MaintainFrame {
     }
     
     private class AnalyseActionListener implements ActionListener {
+    	private Frame frame;
+    	
+    	public AnalyseActionListener(Frame frame) {
+    		this.frame = frame;
+    	}
+    	
         @Override
         public void actionPerformed(ActionEvent e) {
-            //1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"统计分析");
-            jDialog.setBounds(600,250,300,400);
-            
-
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,400);
-            jPanel.setBounds(0,0,720,540);
-
-            JComboBox jComboBox = new JComboBox<String>();
-            jComboBox.addItem(new String("标签1"));
-            jComboBox.setSize(200, 20);
-            
-            JLabel jl=new JLabel(new ImageIcon("resource/Lappland_2.jpg"));
-            jl.setSize(100, 100);
-            
-            // jPanel.setLayout(new GridLayout(2,1));
-            jPanel.add(jl);
-            jPanel.add(jComboBox);
-            jDialog.add(jPanel);
-            
-            jDialog.setVisible(true);
+        	ArrayList<Label> labels = db.getLabelList();
+        	Map<Label, ArrayList<Integer>> table = tools.analyse();
+        	
+        	analyseDialog = new AnalyseDialog(labels, table); 
+        	analyseDialog.show(frame);
         }
     }
     

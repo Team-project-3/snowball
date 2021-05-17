@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import jxl.Cell;
+import jxl.Sheet;
 import jxl.Workbook;
+import jxl.read.biff.BiffException;
 import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
@@ -34,8 +37,54 @@ public class Tools {
 		return t.getStates();
 	}
 	
-	public void importData(String file_path) {
+	public void importData(String file_path) throws BiffException, IOException {
 		
+		//1. ���XLS�ļ�
+		 Workbook workbook=Workbook.getWorkbook(new File(file_path)); 
+	     //2:��ȡ��һ�����sheet
+	     Sheet sheetComment=workbook.getSheet(0);
+	     Sheet sheetLabel = workbook.getSheet(1);
+	     //3:��ȡ���
+	     
+	     //3.1 ��ȡ��ǩ 
+	     for(int i=0;i<sheetLabel.getRows();i++){
+	    	 com.data.Label label = new com.data.Label();
+	    	 ArrayList<String> labelOptions = new ArrayList<String>();//��ǩѡ��
+	 
+	    	 Cell labelContent =sheetLabel.getCell(0,i); //��ǩ����
+	    	System.out.print(labelContent.getContents()+"  ");
+	         for(int j=0;j<sheetLabel.getColumns()-1;j++){
+	              Cell celloption=sheetLabel.getCell(j+1,i);
+	              if(celloption.getContents()==null) {
+	            	  break;
+	              }
+	              labelOptions.add(celloption.getContents());
+	              System.out.print(celloption.getContents()+"  ");
+	          }
+	         System.out.println();
+	          label.setContent(labelContent.getContents());//��ǩ����
+	          label.setOptions(labelOptions);
+	          db.addLabel(label);
+	     }  
+	     
+	     //3.2 ��ȡ����
+	     for(int i=1;i<sheetComment.getRows();i++){
+	    	 Comment comment = new Comment();
+	    	 ArrayList<Integer> commentOptions = new ArrayList<Integer>();
+	    	 Cell commentContent=sheetComment.getCell(0,i);//��������
+	    	 System.out.print(commentContent.getContents()+"  ");
+	    	 for(int j=0;j<sheetComment.getColumns()-1;j++) {
+	    		 Cell commentOption = sheetComment.getCell(j+1,i);
+	    		 commentOptions.add(Integer.parseInt(commentOption.getContents()));
+	    		 System.out.print(commentOption.getContents()+"  ");
+	    	 }
+	    	 System.out.println();
+	    	 comment.setContent(commentContent.getContents());
+	    	 comment.setLabelArrayList(commentOptions);
+	    	 db.addComment(comment);
+	     }  
+	     //4.�رչ���
+	      workbook.close();	
 	}
 	
 	public void exportData(String dir_path, String filename) throws IOException, RowsExceededException, WriteException {
