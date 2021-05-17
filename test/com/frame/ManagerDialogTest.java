@@ -11,12 +11,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class DownloadDialogTest {
+class ManagerDialogTest {
+	private ManagerDialog dialog;
 	
 	
 	@BeforeEach
 	void setUp() throws Exception {
+		dialog = new ManagerDialog();
 		
+		Map<String, String> map = new HashMap();
+		map.put("股票1", "下载中");
+		
+		dialog.setDownLoadList(map);
 	}
 
 	@AfterEach
@@ -25,12 +31,7 @@ class DownloadDialogTest {
 
 	@Test
 	void testShow() {
-		
+		JFrame frame = new JFrame();
+		dialog.show(frame);
 	}
-
-	@Test
-	void testGetDownloadID() {
-//		fail("Not yet implemented");
-	}
-
 }
