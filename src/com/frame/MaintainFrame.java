@@ -23,6 +23,7 @@ public class MaintainFrame {
     private DataBank db;
     private Tools tools;
     private AddLabelDialog addLabelDialog;
+    private DownloadDialog downloadDialog;
 
     public void buildFrame() {
         //1.设置maintainFrame参数
@@ -45,7 +46,7 @@ public class MaintainFrame {
         //2.2向子菜单添加响应事件
         jMenuItem1.addActionListener(new ImportActionListener());
         jMenuItem2.addActionListener(new ExportActionListener());
-        jMenuItem3.addActionListener(new DownLoadActionListener());
+        jMenuItem3.addActionListener(new DownLoadActionListener(maintainFrame));
         jMenuItem4.addActionListener(new ManagerActionListener());
         
         jMenuData.add(jMenuItem1);
@@ -177,50 +178,20 @@ public class MaintainFrame {
     }
     
     private class DownLoadActionListener implements ActionListener {
-        @Override
+    	private Frame frame;
+    	
+    	public DownLoadActionListener(Frame frame) {
+    		this.frame = frame;
+    	}
+    	@Override
         public void actionPerformed(ActionEvent e) {
-        	//1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"数据导入");
-            jDialog.setBounds(600,250,300,200);
-            
-
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,200);
-            JTextField filePath = new JTextField(20);
-            filePath.setLocation(5,10);
-            filePath.setHorizontalAlignment(JTextField.LEFT);
-
-            jPanel.add(filePath);
-
-            JButton jButton = new JButton("下载");
-            jButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    
-                }
-            });
-            JButton yes = new JButton("确定");
-            yes.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            JButton cancel = new JButton("取消");
-            cancel.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            jPanel.add(jButton);
-            jPanel.add(yes);
-            jPanel.add(cancel);
-            jDialog.add(jPanel);
-            
-            jDialog.setVisible(true);
+        	downloadDialog = new DownloadDialog();
+        	downloadDialog.show(frame);
+        	
+        	String downloadID = downloadDialog.getDownloadID();
+        	if (downloadID != null) {
+        		tools.downloadData(downloadID);
+        	}
         }
     }
     
