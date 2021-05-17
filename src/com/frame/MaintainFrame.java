@@ -9,9 +9,6 @@ import com.data.DataBank;
 import com.data.Label;
 import com.data.Tools;
 
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
@@ -19,8 +16,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-
 import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
 public class MaintainFrame {
@@ -343,7 +338,9 @@ public class MaintainFrame {
         	addLabelDialog = new AddLabelDialog(); 
         	addLabelDialog.show(frame);
         	
-        	tools.addLabel(addLabelDialog.getLabel());
+        	Label label = addLabelDialog.getLabel();
+        	if (label != null)
+        		tools.addLabel(label);
         }
     }
 }
