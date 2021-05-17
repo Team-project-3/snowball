@@ -52,12 +52,11 @@ public class ManagerTest {
 		t2.start();
 		TimeUnit.SECONDS.sleep(30);
 
-		int num1 = t1.getResult();
-		int num2 = t2.getResult();
-		//System.out.println(code[0]+" "+num1);
-		//System.out.println(code[1]+" "+num2);
-		
-		assertEquals(1, num1*num2);
+		String s1 = t1.getResult();
+		String s2 = t2.getResult();
+		System.out.println(code[0]+" "+s1);
+		System.out.println(code[1]+" "+s2);
+
 	}
 
 

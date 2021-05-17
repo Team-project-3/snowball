@@ -25,14 +25,13 @@ public class Tools {
 	public void downloadData(String ID) {
 		Manager t = new Manager(ID);
 		t.start();
-		//return t.getResult();
+
 		
 	}
 	
-	public void getDownloading(String ID) {
+	public Map<String, String> getDownloading() {
 		Manager t = new Manager();
-		t.printCode();
-		t.printState();
+		return t.getStates();
 	}
 	
 	public void importData(String file_path) {
