@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jxl.Workbook;
-import jxl.write.Label;
 import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
@@ -23,21 +22,17 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public int downloadData(String ID) {
-		Manager t1 = new Manager(ID);
-		t1.start();
-		try {
-			t1.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return t1.getResult();
+	public void downloadData(String ID) {
+		Manager t = new Manager(ID);
+		t.start();
+		//return t.getResult();
 		
 	}
 	
 	public void getDownloading(String ID) {
-		System.out.println(downloadData(ID));
+		Manager t = new Manager();
+		t.printCode();
+		t.printState();
 	}
 	
 	public void importData(String file_path) {
@@ -77,23 +72,23 @@ public class Tools {
 		WritableSheet ws = wwb.createSheet("commentData", 0);
 		
 		//1.写入表头
-		Label CommentHead = new Label(0, 0, "评论");
+		jxl.write.Label CommentHead = new jxl.write.Label(0, 0, "评论");
 		ws.addCell((WritableCell) CommentHead);
 		for(int i=0;i<labelList.size();i++) {
-			Label labelHead = new Label(i+1,0, labelList.get(i).getContent());
+			jxl.write.Label labelHead = new jxl.write.Label(i+1,0, labelList.get(i).getContent());
 			ws.addCell((WritableCell) labelHead);
 		}
 		
 		//2.写入内容
 		
 		for(int i =0;i<commentList.size();i++) { 
-			Label commentContent = new Label(0,i+1,commentList.get(i).getContent()); 
+			jxl.write.Label commentContent = new jxl.write.Label(0,i+1,commentList.get(i).getContent()); 
 			ws.addCell((WritableCell) commentContent); 
 		} 
 		
 		for(int i =0;i<commentList.size();i++){ 
 			for(int j=0;j<labelList.size();j++) { 
-				Label labelContent = new Label(j+1,i+1,labelList.get(i).getOptions().get(commentList.get(i).getLabelList().get(j) ));
+				jxl.write.Label labelContent = new jxl.write.Label(j+1,i+1,labelList.get(i).getOptions().get(commentList.get(i).getLabelList().get(j) ));
 				ws.addCell((WritableCell) labelContent); 
 			} 
 		}
@@ -103,32 +98,70 @@ public class Tools {
 	}
 	
 	public void addLabel(Label label) {
+		ArrayList<Label> list = new ArrayList<>();
+		list = db.getLabelList();
+		list.add(label);
+		db.setLabelList(list);
 		
+		ArrayList<Integer> list_1 = new ArrayList<>();
+		ArrayList<Comment> list_2 = new ArrayList<>();
+		list_2=db.getCommentList();
+		for(int i = 0 ; i < list_2.size() ; i++) {
+			list_1=list_2.get(i).getLabelList();
+			list_1.add(-1);
+			list_2.get(i).setLabelArrayList(list_1);
+		}
+		db.setCommentList(list_2);
 	}
 
 	public void removeLabel(Label label) {
-		
+		ArrayList<Label> list = new ArrayList<>();
+		list=db.getLabelList();
+		if(list!=null) {
+			ArrayList<Comment> list_1 = new ArrayList<>();
+			list_1=db.getCommentList();
+			ArrayList<Integer> list_2 = new ArrayList<>();
+			for(int i = 0 ; i < list.size(); i++) {
+				if(list.get(i)==label) {
+					for(int j = 0 ; j < list_1.size(); j++) {
+						list_2=list_1.get(j).getLabelList();
+						list_2.remove(i);
+						list_1.get(j).setLabelArrayList(list_2);
+					}
+				}
+			}
+			list.remove(label);
+		}
+		else {
+			System.out.println("没有这个标签！");
+		}
+		db.setLabelList(list);
 	}
 	
-	public ArrayList<Integer> analyse(com.data.Label analyseLabel) {
+
+	public Map<Label, ArrayList<Integer>> analyse() {
+		Map<Label, ArrayList<Integer>> table = new HashMap<>();
 		ArrayList<Comment> comments = this.db.getCommentList();
-		ArrayList<com.data.Label> labels = this.db.getLabelList();
-		int index = labels.indexOf(analyseLabel);
+		ArrayList<Label> labels = this.db.getLabelList();
 		
-		// 初始化label_sum
-		ArrayList<Integer> label_sum = new ArrayList<>();
-		for(int i=0; i < analyseLabel.getOptions().size(); ++i) {
-			label_sum.add(0);
+		int size = labels.size();
+		for (int i=0; i<size; ++i) {
+			// 初始化labelSum
+			ArrayList<Integer> labelSum = new ArrayList<>();
+			int len = labels.get(i).getOptions().size();
+			for(int j=0; j < len; ++j) {
+				labelSum.add(0);
+			}
+			
+			// 统计
+			for (Comment comment : comments) {
+				labelSum.set(comment.getLabelList().get(i), labelSum.get(comment.getLabelList().get(i))+1);
+			}
+			
+			table.put(labels.get(i), labelSum);
 		}
 		
-		// 统计
-		for(Comment comment : comments) {
-			ArrayList<Integer> arrayList = comment.getLabelList();
-			int option = arrayList.get(index);
-			label_sum.set(option, label_sum.get(option)+1);
-		}
-		
-		return label_sum;
+		return table;
 	}
 
 }

@@ -10,4 +10,5 @@ module snowball {
 	requires junit;
 	requires jxl;
 	requires org.junit.jupiter.api;
+	requires jfreechart;
 }
