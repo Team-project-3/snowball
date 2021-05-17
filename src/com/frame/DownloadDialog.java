@@ -13,6 +13,7 @@ public class DownloadDialog {
 	
 	// 该方法获得要下载的股票的代码
 	public String getDownloadID() {
+		return null;
 		
 	}
 }
