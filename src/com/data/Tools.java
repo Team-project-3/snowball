@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import jxl.Cell;
+import jxl.Sheet;
 import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import jxl.write.Label;
 import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
@@ -22,145 +26,158 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public void downloadData(String ID) {
-		Manager t = new Manager(ID);
-		t.start();
-
+	public int downloadData(String ID) {
+		Manager t1 = new Manager(ID);
+		t1.start();
+		try {
+			t1.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return t1.getResult();
 		
 	}
 	
-	public Map<String, String> getDownloading() {
-		Manager t = new Manager();
-		return t.getStates();
+	public void getDownloading(String ID) {
+		System.out.println(downloadData(ID));
 	}
 	
-	public void importData(String file_path) {
+	public void importData(String file_path) throws BiffException, IOException {
 		
+		DataBank db = DataBank.getInstence();
+		//ArrayList<Comment> commentList = new ArrayList<Comment>();
+		//ArrayList<com.data.Label> labelList = db.getLabelList();
+		
+		//1. »ñµÃXLSÎÄ¼ş
+		 Workbook workbook=Workbook.getWorkbook(new File(file_path)); 
+	     //2:»ñÈ¡µÚÒ»¸ö¹¤×÷±ísheet
+	     Sheet sheetComment=workbook.getSheet(0);
+	     Sheet sheetLabel = workbook.getSheet(1);
+	     //3:»ñÈ¡Êı¾İ
+	     
+	     //3.1 »ñÈ¡±êÇ© 
+	     for(int i=0;i<sheetLabel.getRows();i++){
+	    	 com.data.Label label = new com.data.Label();
+	    	 ArrayList<String> labelOptions = new ArrayList<String>();//±êÇ©Ñ¡Ïî
+	 
+	    	 Cell labelContent =sheetLabel.getCell(0,i); //±êÇ©ÄÚÈİ
+	    	System.out.print(labelContent.getContents()+"  ");
+	         for(int j=0;j<sheetLabel.getColumns()-1;j++){
+	              Cell celloption=sheetLabel.getCell(j+1,i);
+	              if(celloption.getContents()==null) {
+	            	  break;
+	              }
+	              labelOptions.add(celloption.getContents());
+	              System.out.print(celloption.getContents()+"  ");
+	          }
+	         System.out.println();
+	          label.setContent(labelContent.getContents());//±êÇ©ÄÚÈİ
+	          label.setOptions(labelOptions);
+	          db.addLabel(label);
+	     }  
+	     
+	     //3.2 »ñÈ¡ÄÚÈİ
+	     for(int i=1;i<sheetComment.getRows();i++){
+	    	 Comment comment = new Comment();
+	    	 ArrayList<Integer> commentOptions = new ArrayList<Integer>();
+	    	 Cell commentContent=sheetComment.getCell(0,i);//ÆÀÂÛÄÚÈİ
+	    	 System.out.print(commentContent.getContents()+"  ");
+	    	 for(int j=0;j<sheetComment.getColumns()-1;j++) {
+	    		 Cell commentOption = sheetComment.getCell(j+1,i);
+	    		 commentOptions.add(Integer.parseInt(commentOption.getContents()));
+	    		 System.out.print(commentOption.getContents()+"  ");
+	    	 }
+	    	 System.out.println();
+	    	 comment.setContent(commentContent.getContents());
+	    	 comment.setLabelArrayList(commentOptions);
+	    	 db.addComment(comment);
+	     }  
+	     //4.¹Ø±Õ¹¤×÷²¾
+	      workbook.close();	
 	}
 	
 	public void exportData(String dir_path, String filename) throws IOException, RowsExceededException, WriteException {
-		DataBank db = new DataBank();
-		ArrayList<Comment> commentList = new ArrayList<Comment>();
-		//è¯„è®º
-		ArrayList<Integer> optionsComment1 = new ArrayList<Integer>();
-		ArrayList<Integer> optionsComment2 = new ArrayList<Integer>();
-		optionsComment1.add(0);
-		optionsComment1.add(0);
-		optionsComment2.add(0);
-		optionsComment2.add(2);
-		commentList.add(new Comment("è‚¡ç¥¨æ¶¨åŠ¿å¾ˆå¥½",optionsComment1));
-		commentList.add(new Comment("è‚¡ç¥¨æ¶¨åŠ¿è¿˜å·®ç‚¹",optionsComment2));
-	
-		//æ ‡ç­¾
+		//´ÓDataBankÖĞ»ñÈ¡Êı¾İ
+		DataBank db = DataBank.getInstence();
+		ArrayList<Comment> commentList = db.getCommentList();	
 		ArrayList<com.data.Label> labelList = db.getLabelList();
-		ArrayList<String> optionslabel1 = new ArrayList<String>();
-		ArrayList<String> optionslabel2 = new ArrayList<String>();
-		optionslabel1.add("æ˜¯");
-		optionslabel1.add("å¦");
-		optionslabel2.add("æ­£é¢");
-		optionslabel2.add("ä¸­æ€§");
-		optionslabel2.add("è´Ÿé¢");
-		labelList.add(new com.data.Label(1,"è¯„è®ºæ˜¯å¦ä¸è‚¡ç¥¨ç›¸å…³ï¼Ÿ",optionslabel1));
-		labelList.add(new com.data.Label(2,"è¯„è®ºæ˜¯æ­£é¢ã€ä¸­æ€§è¿˜æ˜¯è´Ÿé¢ï¼Ÿ",optionslabel2));
 		
-		//å¯¼å‡ºæ•°æ®ä¸º.xlsæ–‡ä»¶
+		//1.´´½¨¹¤×÷äß£¬µ¼³öÊı¾İÎª.xlsÎÄ¼ş
 		File filepath = new File(dir_path);
 		filepath.mkdirs();
 		File file =new File(filepath,filename);
 		WritableWorkbook wwb = Workbook.createWorkbook(file);
-		WritableSheet ws = wwb.createSheet("commentData", 0);
+		WritableSheet wsComment = wwb.createSheet("commentData", 0);//´æÆÀÂÛ
+		WritableSheet wsLabel = wwb.createSheet("labelData", 1);//´æ±êÇ©
 		
-		//1.å†™å…¥è¡¨å¤´
-		jxl.write.Label CommentHead = new jxl.write.Label(0, 0, "è¯„è®º");
-		ws.addCell((WritableCell) CommentHead);
+		//1.µ¼³ö±êÇ©
 		for(int i=0;i<labelList.size();i++) {
-			jxl.write.Label labelHead = new jxl.write.Label(i+1,0, labelList.get(i).getContent());
-			ws.addCell((WritableCell) labelHead);
+			Label labelContent = new Label(0,i, labelList.get(i).getContent());
+			wsLabel.addCell((WritableCell) labelContent);
+			for(int j=0;j<labelList.get(i).getOptions().size();j++) {
+				Label labelOption = new Label(j+1,i, labelList.get(i).getOptions().get(j));
+				wsLabel.addCell((WritableCell) labelOption);
+			}
 		}
 		
-		//2.å†™å…¥å†…å®¹
+		//2.µ¼³öÆÀÂÛ
+		//2.1.Ğ´Èë±íÍ·
+		Label CommentHead = new Label(0, 0, "ÆÀÂÛ");
+		wsComment.addCell((WritableCell) CommentHead);
+		for(int i=0;i<labelList.size();i++) {
+			String sb  = labelList.get(i).getContent();
+			for(int j=0;j<labelList.get(i).getOptions().size();j++) {
+				sb = sb +"  "+j+"."+labelList.get(i).getOptions().get(j);
+			}
+			Label labelHead = new Label(i+1,0, sb);
+			wsComment.addCell((WritableCell) labelHead);
+		}
 		
+		//2.2.Ğ´ÈëÄÚÈİ
 		for(int i =0;i<commentList.size();i++) { 
-			jxl.write.Label commentContent = new jxl.write.Label(0,i+1,commentList.get(i).getContent()); 
-			ws.addCell((WritableCell) commentContent); 
+			Label commentContent = new Label(0,i+1,commentList.get(i).getContent()); 
+			wsComment.addCell((WritableCell) commentContent); 
 		} 
 		
 		for(int i =0;i<commentList.size();i++){ 
 			for(int j=0;j<labelList.size();j++) { 
-				jxl.write.Label labelContent = new jxl.write.Label(j+1,i+1,labelList.get(i).getOptions().get(commentList.get(i).getLabelList().get(j) ));
-				ws.addCell((WritableCell) labelContent); 
+				Label labelContent = new Label(j+1,i+1,commentList.get(i).getLabelList().get(j).toString());
+				wsComment.addCell((WritableCell) labelContent); 
 			} 
 		}
 
-		wwb.write();// å†™å…¥æ•°æ®
+		wwb.write();// Ğ´ÈëÊı¾İ
 		wwb.close();
 	}
 	
 	public void addLabel(Label label) {
-		ArrayList<Label> list = new ArrayList<>();
-		list = db.getLabelList();
-		list.add(label);
-		db.setLabelList(list);
 		
-		ArrayList<Integer> list_1 = new ArrayList<>();
-		ArrayList<Comment> list_2 = new ArrayList<>();
-		list_2=db.getCommentList();
-		for(int i = 0 ; i < list_2.size() ; i++) {
-			list_1=list_2.get(i).getLabelList();
-			list_1.add(-1);
-			list_2.get(i).setLabelArrayList(list_1);
-		}
-		db.setCommentList(list_2);
 	}
 
 	public void removeLabel(Label label) {
-		ArrayList<Label> list = new ArrayList<>();
-		list=db.getLabelList();
-		if(list!=null) {
-			ArrayList<Comment> list_1 = new ArrayList<>();
-			list_1=db.getCommentList();
-			ArrayList<Integer> list_2 = new ArrayList<>();
-			for(int i = 0 ; i < list.size(); i++) {
-				if(list.get(i)==label) {
-					for(int j = 0 ; j < list_1.size(); j++) {
-						list_2=list_1.get(j).getLabelList();
-						list_2.remove(i);
-						list_1.get(j).setLabelArrayList(list_2);
-					}
-				}
-			}
-			list.remove(label);
-		}
-		else {
-			System.out.println("æ²¡æœ‰è¿™ä¸ªæ ‡ç­¾ï¼");
-		}
-		db.setLabelList(list);
+		
 	}
 	
-
-	public Map<Label, ArrayList<Integer>> analyse() {
-		Map<Label, ArrayList<Integer>> table = new HashMap<>();
+	public ArrayList<Integer> analyse(com.data.Label analyseLabel) {
 		ArrayList<Comment> comments = this.db.getCommentList();
-		ArrayList<Label> labels = this.db.getLabelList();
+		ArrayList<com.data.Label> labels = this.db.getLabelList();
+		int index = labels.indexOf(analyseLabel);
 		
-		int size = labels.size();
-		for (int i=0; i<size; ++i) {
-			// åˆå§‹åŒ–labelSum
-			ArrayList<Integer> labelSum = new ArrayList<>();
-			int len = labels.get(i).getOptions().size();
-			for(int j=0; j < len; ++j) {
-				labelSum.add(0);
-			}
-			
-			// ç»Ÿè®¡
-			for (Comment comment : comments) {
-				labelSum.set(comment.getLabelList().get(i), labelSum.get(comment.getLabelList().get(i))+1);
-			}
-			
-			table.put(labels.get(i), labelSum);
+		// åˆå§‹åŒ–label_sum
+		ArrayList<Integer> label_sum = new ArrayList<>();
+		for(int i=0; i < analyseLabel.getOptions().size(); ++i) {
+			label_sum.add(0);
 		}
 		
-		return table;
+		// ç»Ÿè®¡
+		for(Comment comment : comments) {
+			ArrayList<Integer> arrayList = comment.getLabelList();
+			int option = arrayList.get(index);
+			label_sum.set(option, label_sum.get(option)+1);
+		}
+		
+		return label_sum;
 	}
 
 }
