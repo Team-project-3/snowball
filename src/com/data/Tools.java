@@ -47,44 +47,44 @@ public class Tools {
 	public void exportData(String dir_path, String filename) throws IOException, RowsExceededException, WriteException {
 		DataBank db = new DataBank();
 		ArrayList<Comment> commentList = new ArrayList<Comment>();
-		//ÆÀÂÛ
+		//è¯„è®º
 		ArrayList<Integer> optionsComment1 = new ArrayList<Integer>();
 		ArrayList<Integer> optionsComment2 = new ArrayList<Integer>();
 		optionsComment1.add(0);
 		optionsComment1.add(0);
 		optionsComment2.add(0);
 		optionsComment2.add(2);
-		commentList.add(new Comment("¹ÉÆ±ÕÇÊÆºÜºÃ",optionsComment1));
-		commentList.add(new Comment("¹ÉÆ±ÕÇÊÆ»¹²îµã",optionsComment2));
+		commentList.add(new Comment("è‚¡ç¥¨æ¶¨åŠ¿å¾ˆå¥½",optionsComment1));
+		commentList.add(new Comment("è‚¡ç¥¨æ¶¨åŠ¿è¿˜å·®ç‚¹",optionsComment2));
 	
-		//±êÇ©
+		//æ ‡ç­¾
 		ArrayList<com.data.Label> labelList = db.getLabelList();
 		ArrayList<String> optionslabel1 = new ArrayList<String>();
 		ArrayList<String> optionslabel2 = new ArrayList<String>();
-		optionslabel1.add("ÊÇ");
-		optionslabel1.add("·ñ");
-		optionslabel2.add("ÕıÃæ");
-		optionslabel2.add("ÖĞĞÔ");
-		optionslabel2.add("¸ºÃæ");
-		labelList.add(new com.data.Label(1,"ÆÀÂÛÊÇ·ñÓë¹ÉÆ±Ïà¹Ø£¿",optionslabel1));
-		labelList.add(new com.data.Label(2,"ÆÀÂÛÊÇÕıÃæ¡¢ÖĞĞÔ»¹ÊÇ¸ºÃæ£¿",optionslabel2));
+		optionslabel1.add("æ˜¯");
+		optionslabel1.add("å¦");
+		optionslabel2.add("æ­£é¢");
+		optionslabel2.add("ä¸­æ€§");
+		optionslabel2.add("è´Ÿé¢");
+		labelList.add(new com.data.Label(1,"è¯„è®ºæ˜¯å¦ä¸è‚¡ç¥¨ç›¸å…³ï¼Ÿ",optionslabel1));
+		labelList.add(new com.data.Label(2,"è¯„è®ºæ˜¯æ­£é¢ã€ä¸­æ€§è¿˜æ˜¯è´Ÿé¢ï¼Ÿ",optionslabel2));
 		
-		//µ¼³öÊı¾İÎª.xlsÎÄ¼ş
+		//å¯¼å‡ºæ•°æ®ä¸º.xlsæ–‡ä»¶
 		File filepath = new File(dir_path);
 		filepath.mkdirs();
 		File file =new File(filepath,filename);
 		WritableWorkbook wwb = Workbook.createWorkbook(file);
 		WritableSheet ws = wwb.createSheet("commentData", 0);
 		
-		//1.Ğ´Èë±íÍ·
-		Label CommentHead = new Label(0, 0, "ÆÀÂÛ");
+		//1.å†™å…¥è¡¨å¤´
+		Label CommentHead = new Label(0, 0, "è¯„è®º");
 		ws.addCell((WritableCell) CommentHead);
 		for(int i=0;i<labelList.size();i++) {
 			Label labelHead = new Label(i+1,0, labelList.get(i).getContent());
 			ws.addCell((WritableCell) labelHead);
 		}
 		
-		//2.Ğ´ÈëÄÚÈİ
+		//2.å†™å…¥å†…å®¹
 		
 		for(int i =0;i<commentList.size();i++) { 
 			Label commentContent = new Label(0,i+1,commentList.get(i).getContent()); 
@@ -98,7 +98,7 @@ public class Tools {
 			} 
 		}
 
-		wwb.write();// Ğ´ÈëÊı¾İ
+		wwb.write();// å†™å…¥æ•°æ®
 		wwb.close();
 	}
 	
