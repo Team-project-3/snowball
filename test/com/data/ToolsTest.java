@@ -66,10 +66,10 @@ class ToolsTest {
 		Tools tool = new Tools(db);
 		Comment comment = new Comment();
 		comment.setId(0);
-		comment.setContent("��һ������");
+		comment.setContent("评论1");
 		Comment comment_1 = new Comment();
 		comment_1.setId(1);
-		comment_1.setContent("�ڶ�������");
+		comment_1.setContent("评论2");
 		
 		ArrayList<Comment> list = new ArrayList<>();
 		list.add(comment);
@@ -94,8 +94,8 @@ class ToolsTest {
 		
 		assertEquals(db.getCommentList().get(0).getId(),0);
 		assertEquals(db.getCommentList().get(1).getId(),1);
-		assertEquals(db.getCommentList().get(0).getContent(),"��һ������");
-		assertEquals(db.getCommentList().get(1).getContent(),"�ڶ�������");
+		assertEquals(db.getCommentList().get(0).getContent(),"评论1");
+		assertEquals(db.getCommentList().get(1).getContent(),"评论2");
 		assertEquals(db.getCommentList().get(0).getLabelList().get(0),-1);
 		assertEquals(db.getCommentList().get(1).getLabelList().get(0),-1);
 	}
