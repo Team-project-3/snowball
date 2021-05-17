@@ -1,15 +1,16 @@
 package com.frame;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.Assert;
 
 class DownloadDialogTest {
+	DownloadDialog dialog;
 
 	@BeforeEach
 	void setUp() throws Exception {
+		dialog = new DownloadDialog();
 	}
 
 	@AfterEach
@@ -18,12 +19,15 @@ class DownloadDialogTest {
 
 	@Test
 	void testShow() {
-		fail("Not yet implemented");
+		dialog.show(null);
 	}
 
 	@Test
 	void testGetDownloadID() {
-		fail("Not yet implemented");
+		dialog.show(null);
+		String downloadID = dialog.getDownloadID();
+		
+		Assert.assertEquals("AB123456", downloadID);
 	}
 
 }
