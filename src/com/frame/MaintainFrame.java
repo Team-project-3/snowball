@@ -5,21 +5,24 @@ import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.data.DataBank;
+import com.data.Label;
 import com.data.Tools;
 
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-
 import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
 public class MaintainFrame {
     public static JFrame maintainFrame = new JFrame("数据维护者");
+    private DataBank db;
+    private Tools tools;
+    private AddLabelDialog addLabelDialog;
 
     public void buildFrame() {
         //1.设置maintainFrame参数
@@ -55,7 +58,7 @@ public class MaintainFrame {
         JMenu jMenuEdit = new JMenu("编辑");
         JMenuItem build = new JMenuItem("新建标签");
         JMenuItem delete = new JMenuItem("删除标签");
-        build.addActionListener(new AddActionListener());
+        build.addActionListener(new AddActionListener(maintainFrame));
         delete.addActionListener(new DeleteActionListener());
         jMenuEdit.add(build);
         jMenuEdit.add(delete);
@@ -324,18 +327,20 @@ public class MaintainFrame {
     }
     
     private class AddActionListener implements ActionListener {
+    	private Frame frame;
+    	
+    	public AddActionListener(Frame frame) {
+    		this.frame = frame;
+    	}
+    	
         @Override
         public void actionPerformed(ActionEvent e) {
-  
-        	AddLabelDialog.show();
-            
-           
-           
-
-            
-           
-            
-        
+        	addLabelDialog = new AddLabelDialog(); 
+        	addLabelDialog.show(frame);
+        	
+        	Label label = addLabelDialog.getLabel();
+        	if (label != null)
+        		tools.addLabel(label);
         }
     }
 }
