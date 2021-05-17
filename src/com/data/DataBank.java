@@ -15,6 +15,10 @@ public class DataBank {
     	return commentList;
     }
     
+    public void setCommentList(ArrayList<Comment> commentList) {
+    	this.commentList=commentList;
+    }
+    
     public boolean addComment(Comment comment) {
     	return commentList.add(comment);
     }
@@ -25,6 +29,10 @@ public class DataBank {
     
     public ArrayList<Label> getLabelList() {
     	return labelList;
+    }
+    
+    public void setLabelList(ArrayList<Label> labelList) {
+    	this.labelList=labelList;
     }
     
     public boolean addLabel(Label label) {
