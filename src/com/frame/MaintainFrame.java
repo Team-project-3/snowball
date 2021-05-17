@@ -26,6 +26,7 @@ public class MaintainFrame {
     private DataBank db;
     private Tools tools;
     private AddLabelDialog addLabelDialog;
+    private ManagerDialog managerDialog;
     private DownloadDialog downloadDialog;
     private AnalyseDialog analyseDialog;
 
@@ -50,9 +51,9 @@ public class MaintainFrame {
         //2.2向子菜单添加响应事件
         jMenuItem1.addActionListener(new ImportActionListener());
         jMenuItem2.addActionListener(new ExportActionListener());
+        jMenuItem4.addActionListener(new ManagerActionListener(maintainFrame));
         jMenuItem3.addActionListener(new DownLoadActionListener(maintainFrame));
-        jMenuItem4.addActionListener(new ManagerActionListener());
-        
+      
         jMenuData.add(jMenuItem1);
         jMenuData.add(jMenuItem2);
         jMenuData.addSeparator();
@@ -200,39 +201,18 @@ public class MaintainFrame {
     }
     
     private class ManagerActionListener implements ActionListener {
+    	private Frame frame;
+    	
+    	ManagerActionListener(Frame frame){
+    		this.frame = frame;
+    	}
+    	
         @Override
         public void actionPerformed(ActionEvent e) {
-            //1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"下载管理");
-            jDialog.setBounds(600,250,300,400);
+            Map<String, String> table = tools.getDownloading();
             
-
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,400);
-            jPanel.setBounds(0,0,720,540);
-            String[] dataList = new String[10];
-            
-            String[] str = {"股票1"};
-            JList<String> jList1=new JList(str);
-
-            JList<JProgressBar> jList2=new JList();
-            JProgressBar jProgressBar =  new JProgressBar();
-            jProgressBar.setStringPainted(true);
-            jProgressBar.setIndeterminate(true);
-            jProgressBar.setString("下载中......");
-            jList2.add(jProgressBar);
-            
-            Border border = BorderFactory.createLineBorder(Color.BLACK,1);
-            jList1.setBorder(border);
-            jList2.setBorder(border);
-            jPanel.setLayout(new GridLayout(1, 2));
-            jPanel.add(jList1);
-            jPanel.add(jList2);
-            jDialog.add(jPanel);
-            
-            jDialog.setVisible(true);
+            managerDialog.setDownLoadList(table);
+            managerDialog.show(frame);
         }
     }
     
