@@ -11,6 +11,7 @@ class DownloadDialogTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		dialog = new DownloadDialog();
+
 	}
 
 	@AfterEach
