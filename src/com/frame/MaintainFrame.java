@@ -16,6 +16,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
+
 import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
 public class MaintainFrame {
@@ -23,6 +26,7 @@ public class MaintainFrame {
     private DataBank db;
     private Tools tools;
     private AddLabelDialog addLabelDialog;
+    private AnalyseDialog analyseDialog;
 
     public void buildFrame() {
         //1.设置maintainFrame参数
@@ -66,7 +70,7 @@ public class MaintainFrame {
 
         //2.4.统计菜单
         JMenuItem jMenuTitle = new JMenuItem("统计");
-        jMenuTitle.addActionListener(new AnalyseActionListener());
+        jMenuTitle.addActionListener(new AnalyseActionListener(maintainFrame));
         jmb.add(jMenuTitle);
         maintainFrame.setJMenuBar(jmb);
 
@@ -262,32 +266,19 @@ public class MaintainFrame {
     }
     
     private class AnalyseActionListener implements ActionListener {
+    	private Frame frame;
+    	
+    	public AnalyseActionListener(Frame frame) {
+    		this.frame = frame;
+    	}
+    	
         @Override
         public void actionPerformed(ActionEvent e) {
-            //1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"统计分析");
-            jDialog.setBounds(600,250,300,400);
-            
-
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,400);
-            jPanel.setBounds(0,0,720,540);
-
-            JComboBox jComboBox = new JComboBox<String>();
-            jComboBox.addItem(new String("标签1"));
-            jComboBox.setSize(200, 20);
-            
-            JLabel jl=new JLabel(new ImageIcon("resource/Lappland_2.jpg"));
-            jl.setSize(100, 100);
-            
-            // jPanel.setLayout(new GridLayout(2,1));
-            jPanel.add(jl);
-            jPanel.add(jComboBox);
-            jDialog.add(jPanel);
-            
-            jDialog.setVisible(true);
+        	ArrayList<Label> labels = db.getLabelList();
+        	Map<Label, ArrayList<Integer>> table = tools.analyse();
+        	
+        	analyseDialog = new AnalyseDialog(labels, table); 
+        	analyseDialog.show(frame);
         }
     }
     
