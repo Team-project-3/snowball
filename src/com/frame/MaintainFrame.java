@@ -5,6 +5,7 @@ import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.data.Comment;
 import com.data.DataBank;
 import com.data.Label;
 import com.data.Tools;
@@ -12,10 +13,8 @@ import com.data.Tools;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -31,6 +30,9 @@ public class MaintainFrame {
     private AnalyseDialog analyseDialog;
 
     public void buildFrame() {
+    	db = DataBank.getInstence();
+    	tools = new Tools(db);
+    	
         //1.设置maintainFrame参数
         maintainFrame.setBounds(500,200,720,540);
         maintainFrame.setVisible(true);
@@ -81,24 +83,29 @@ public class MaintainFrame {
         JPanel jPanel = new JPanel(null);
         jPanel.setVisible(true);
         jPanel.setBounds(0,0,720,540);
-        String[] dataList = new String[10];
-        for(int i = 0;i<10;i++){
-            dataList[i] = "评论                                    "+i;
+        
+        ArrayList<String> arrData = new ArrayList<>();
+        ArrayList<Comment> comments = db.getCommentList();
+        
+        int len = comments.size();
+        for(int i = 0; i < len; i++){
+            arrData.add(comments.get(i).getContent());
         }
 
+        String[] strData = arrData.toArray(new String[len]);
         JTextArea jTextArea = new JTextArea("评论内容\n");
-        JList<String> jList = new JList<>(dataList);
+        JList<String> jList = new JList<String>();
         Border border = BorderFactory.createLineBorder(Color.BLACK,2);
 
         jList.setBounds(5,0,540,270);
         jList.setBackground(Color.lightGray);
         jList.setFont(Font.getFont("楷体"));
-        jList.setListData(dataList);
+        jList.setListData(strData);
         jList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int index = jList.getSelectedIndex();
-                jTextArea.setText(dataList[index]);
+                jTextArea.setText(strData[index]);
             }
         });
         jList.setBorder(border);
@@ -122,55 +129,8 @@ public class MaintainFrame {
     private class ImportActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            //1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"数据导入");
-            jDialog.setBounds(600,250,300,200);
-            
-
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,200);
-            JTextField filePath = new JTextField(20);
-            filePath.setLocation(5,10);
-            filePath.setHorizontalAlignment(JTextField.LEFT);
-
-            jPanel.add(filePath);
-
-            JButton jButton = new JButton("浏览");
-            jButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JFileChooser jf = new JFileChooser();
-                    jf.showOpenDialog(maintainFrame);//显示打开的文件对话框
-                    File f =  jf.getSelectedFile();//使用文件类获取选择器选择的文件
-                    if(f==null){
-                        return;
-                    }
-                    String s = f.getAbsolutePath();//返回路径名
-                    filePath.setText(s);
-                }
-            });
-            JButton yes = new JButton("确定");
-            yes.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            JButton cancel = new JButton("取消");
-            cancel.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
-                }
-            });
-            jPanel.add(jButton);
-            jPanel.add(yes);
-            jPanel.add(cancel);
-            jDialog.add(jPanel);
-            
-            jDialog.setVisible(true);
+           ImportDialog id = new ImportDialog(maintainFrame);
+           id.show();
         }
     }
     

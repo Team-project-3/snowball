@@ -88,7 +88,6 @@ public class Tools {
 	}
 	
 	public void exportData(String dir_path, String filename) throws IOException, RowsExceededException, WriteException {
-		DataBank db = new DataBank();
 		ArrayList<Comment> commentList = new ArrayList<Comment>();
 		//评论
 		ArrayList<Integer> optionsComment1 = new ArrayList<Integer>();

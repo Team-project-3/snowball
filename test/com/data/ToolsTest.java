@@ -61,7 +61,7 @@ class ToolsTest {
 
 	@Test
 	void testAddLabel() {
-		DataBank db = new DataBank();
+		DataBank db = DataBank.getInstence();
 
 		Tools tool = new Tools(db);
 		Comment comment = new Comment();
@@ -102,7 +102,7 @@ class ToolsTest {
 
 	@Test
 	void testRemoveLabel() {
-		DataBank db = new DataBank();
+		DataBank db = DataBank.getInstence();
 		Tools tool = new Tools(db);
 		
 		Comment comment = new Comment();
@@ -152,7 +152,7 @@ class ToolsTest {
 
 	@Test
 	void testAnalyse() {
-		DataBank db = new DataBank();
+		DataBank db = DataBank.getInstence();
 		
 		Comment c1 = new Comment();
 		c1.setContent("comment 1");

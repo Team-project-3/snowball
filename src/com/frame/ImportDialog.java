@@ -28,7 +28,7 @@ public class ImportDialog {
 		// TODO Auto-generated constructor stub
 		//1.弹出对话框
 				parentFrame = frame;
-		        jDialog = new JDialog(parentFrame,"数据导入");
+		        jDialog = new JDialog(parentFrame,"数据导入", true);
 		        jDialog.setBounds(600,250,300,200);
 		        
 
@@ -63,7 +63,12 @@ public class ImportDialog {
 		            public void actionPerformed(ActionEvent e) {
 		                jDialog.show(false);
 		                Tools tool = new Tools(null);
-		                tool.importData(getFilePath()); 
+		                try {
+							tool.importData(getFilePath());
+						} catch (BiffException | IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} 
 		            }
 		        });
 		        JButton cancel = new JButton("取消");
