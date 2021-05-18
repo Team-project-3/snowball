@@ -29,8 +29,9 @@ class ToolsTest {
 
 	//@Test
 	@Ignore
-	void testDownloadData() throws InterruptedException {
-		Tools t = new Tools(null);
+	void testDownloadData() throws InterruptedException, BiffException, IOException {
+		DataBank db = DataBank.getInstence();
+		Tools t = new Tools(db);
 		t.downloadData("SZ002353");
 		t.downloadData("SH600415");
 		TimeUnit.SECONDS.sleep(30);//让主线程睡个30秒，不然主线程直接结束，测试失败
@@ -38,12 +39,15 @@ class ToolsTest {
 	}
 
 	@Test
-	void testGetDownloading() throws InterruptedException {
-		Tools t = new Tools(null);
+	void testGetDownloading() throws InterruptedException, BiffException, IOException {
+		DataBank db = DataBank.getInstence();
+		Tools t = new Tools(db);
 		System.out.println(t.getDownloading());
 		t.downloadData("SZ002353");
+		t.downloadData("SH600415");
 		System.out.println(t.getDownloading());
-		TimeUnit.SECONDS.sleep(30);//让主线程睡个30秒，不然主线程直接结束，测试失败
+		TimeUnit.SECONDS.sleep(120);//让主线程睡个30秒，不然主线程直接结束，测试失败
+		System.out.println(db.getCommentList());
 		System.out.println(t.getDownloading());
 	}
 
@@ -64,7 +68,7 @@ class ToolsTest {
 
 	@Test
 	void testAddLabel() {
-		DataBank db = new DataBank();
+		DataBank db = DataBank.getInstence();
 
 		Tools tool = new Tools(db);
 		Comment comment = new Comment();
@@ -105,7 +109,7 @@ class ToolsTest {
 
 	@Test
 	void testRemoveLabel() {
-		DataBank db = new DataBank();
+		DataBank db = DataBank.getInstence();
 		Tools tool = new Tools(db);
 		
 		Comment comment = new Comment();
@@ -155,7 +159,7 @@ class ToolsTest {
 
 	@Test
 	void testAnalyse() {
-		DataBank db = new DataBank();
+		DataBank db = DataBank.getInstence();
 		
 		Comment c1 = new Comment();
 		c1.setContent("comment 1");

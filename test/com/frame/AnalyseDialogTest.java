@@ -74,7 +74,7 @@ class AnalyseDialogTest {
 	void testShow() throws InterruptedException {
 		Frame frame = new Frame("test");
 		frame.setVisible(true);
-		dialog.show(frame, true);
+		dialog.show(frame);
 	}
 
 }

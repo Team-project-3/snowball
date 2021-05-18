@@ -26,7 +26,7 @@ public class ExportDialog {
 		// TODO Auto-generated constructor stub
 		//1.弹出对话框
 		maintainFrame = frame;
-        jDialog = new JDialog(maintainFrame,"数据导出");
+        jDialog = new JDialog(maintainFrame,"数据导出", true);
         jDialog.setBounds(600,250,300,200);
         
 
