@@ -35,7 +35,7 @@ def func(code):
     result=json.loads(req);
     maxPage=result['maxPage']
     name=params["symbol"]
-    path=".\\评论\\"+name+".xls"
+    path=name+".xls"
 
     try:
         rb = xlrd.open_workbook(path)

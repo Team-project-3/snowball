@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
@@ -28,8 +29,9 @@ class ToolsTest {
 
 	//@Test
 	@Ignore
-	void testDownloadData() throws InterruptedException {
-		Tools t = new Tools(null);
+	void testDownloadData() throws InterruptedException, BiffException, IOException {
+		DataBank db = DataBank.getInstence();
+		Tools t = new Tools(db);
 		t.downloadData("SZ002353");
 		t.downloadData("SH600415");
 		TimeUnit.SECONDS.sleep(30);//让主线程睡个30秒，不然主线程直接结束，测试失败
@@ -37,12 +39,15 @@ class ToolsTest {
 	}
 
 	@Test
-	void testGetDownloading() throws InterruptedException {
-		Tools t = new Tools(null);
+	void testGetDownloading() throws InterruptedException, BiffException, IOException {
+		DataBank db = DataBank.getInstence();
+		Tools t = new Tools(db);
 		System.out.println(t.getDownloading());
 		t.downloadData("SZ002353");
+		t.downloadData("SH600415");
 		System.out.println(t.getDownloading());
-		TimeUnit.SECONDS.sleep(30);//让主线程睡个30秒，不然主线程直接结束，测试失败
+		TimeUnit.SECONDS.sleep(120);//让主线程睡个30秒，不然主线程直接结束，测试失败
+		System.out.println(db.getCommentList());
 		System.out.println(t.getDownloading());
 	}
 

@@ -25,11 +25,10 @@ public class Tools {
 		this.db = db;
 	}
 	
-	public void downloadData(String ID) {
-		Manager t = new Manager(ID);
+	public void downloadData(String ID) throws InterruptedException, BiffException, IOException {
+		Manager t = new Manager(ID,db);
 		t.start();
 
-		
 	}
 	
 	public Map<String, String> getDownloading() {
@@ -88,6 +87,7 @@ public class Tools {
 	}
 	
 	public void exportData(String dir_path, String filename) throws IOException, RowsExceededException, WriteException {
+		DataBank db = DataBank.getInstence();
 		ArrayList<Comment> commentList = new ArrayList<Comment>();
 		//评论
 		ArrayList<Integer> optionsComment1 = new ArrayList<Integer>();
