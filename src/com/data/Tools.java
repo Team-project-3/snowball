@@ -39,6 +39,11 @@ public class Tools {
 		return t.getStates();
 	}
 	
+	public void downloadDelete(String ID) {
+		Manager t = new Manager();
+		t.delCodeAndState(ID);
+	}
+	
 	public void importData(String file_path) throws BiffException, IOException {
 		DataBank db = DataBank.getInstence();
 		db.getCommentList().clear();

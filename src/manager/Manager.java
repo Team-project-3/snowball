@@ -21,7 +21,7 @@ import spider.Spider2;
 public class Manager extends Thread {
 
 	private static List<String> codes=new ArrayList<String>();
-	private static Map<String, String> states = new HashMap<>();//状态 0失败 1成功
+	private static Map<String, String> states = new HashMap<>();//状态 0失败 1成功 2代码错误
 	private String code;
 	private DataBank db;
 	JList jList;
@@ -40,20 +40,28 @@ public class Manager extends Thread {
     public void run() {
 
     	try {
-        	if(new Spider2().run(code)==1) states.put(code, "已完成");
-        	
-        	Workbook workbook=Workbook.getWorkbook(new File("./"+code+".xls")); 
-    		Sheet sheetComment=workbook.getSheet(0);
-    		for(int i=1;i<sheetComment.getRows();i++){
-    	    	 Comment comment = new Comment();
-    	    	 Cell commentContent=sheetComment.getCell(3,i);
-    	    	 comment.setContent(commentContent.getContents());
-    	    	 db.addComment(comment);
-    	     }
-    		db.getLabelList().clear();
-    		//System.out.println(db.getCommentList());
-    		File f=new File("./"+code+".xls");
-			f.delete();
+    		int tmp  = new Spider2().run(code);
+    		if(tmp == 2) {
+    			states.put(code, "代码错误");
+    			File f=new File("./"+code+".xls");
+    			f.delete();
+    		}
+    		else if(tmp == 1) {
+    			states.put(code, "已完成");
+    			
+    			Workbook workbook=Workbook.getWorkbook(new File("./"+code+".xls")); 
+        		Sheet sheetComment=workbook.getSheet(0);
+        		for(int i=1;i<sheetComment.getRows();i++){
+        	    	 Comment comment = new Comment();
+        	    	 Cell commentContent=sheetComment.getCell(3,i);
+        	    	 comment.setContent(commentContent.getContents());
+        	    	 db.addComment(comment);
+        	     }
+        		db.getLabelList().clear();
+        		//System.out.println(db.getCommentList());
+        		File f=new File("./"+code+".xls");
+    			f.delete();
+    		}
 
         }catch (Exception e){
             e.printStackTrace();
@@ -87,6 +95,10 @@ public class Manager extends Thread {
     	return states.get(code);
     }
 
+    public void delCodeAndState(String code) {
+    	states.remove(code);
+    	codes.remove(code);
+    }
    
     
 }

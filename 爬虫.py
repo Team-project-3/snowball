@@ -83,4 +83,4 @@ def func(code):
 if __name__ == '__main__':
     code=sys.argv[1]#java调用传进来的参数
     func(code)
-    #func("SH600415")
+    #func("123")
