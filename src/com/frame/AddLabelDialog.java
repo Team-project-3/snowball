@@ -23,9 +23,9 @@ public class AddLabelDialog {
 	}
 
 	// 该方法显示对话框
-	public void show(Frame maintainFrame) {
+	public void show(Frame maintainFrame, boolean model) {
 		  //1.弹出对话框
-		jDialog = new JDialog(maintainFrame, "添加标签", true);
+		jDialog = new JDialog(maintainFrame, "添加标签", model);
         jDialog.setBounds(600,250,300,300);
         
 
