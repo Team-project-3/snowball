@@ -28,6 +28,7 @@ public class MaintainFrame {
     private DataBank db;
     private Tools tools;
     private AddLabelDialog addLabelDialog;
+    private RemoveLabelDialog removeLabelDialog;
     private ManagerDialog managerDialog;
     private DownloadDialog downloadDialog;
     private AnalyseDialog analyseDialog;
@@ -75,7 +76,7 @@ public class MaintainFrame {
         JMenuItem build = new JMenuItem("新建标签");
         JMenuItem delete = new JMenuItem("删除标签");
         build.addActionListener(new AddActionListener(maintainFrame));
-        delete.addActionListener(new DeleteActionListener());
+        delete.addActionListener(new DeleteActionListener(maintainFrame));
         jMenuEdit.add(build);
         jMenuEdit.add(delete);
         jmb.add(jMenuEdit);
@@ -267,37 +268,22 @@ public class MaintainFrame {
     }
     
     private class DeleteActionListener implements ActionListener {
+    	private Frame frame;
+    	
+    	public DeleteActionListener(Frame frame) {
+    		this.frame = frame;
+    	}
+    	
         @Override
         public void actionPerformed(ActionEvent e) {
-            //1.弹出对话框
-            JDialog jDialog;
-            jDialog = new JDialog(maintainFrame,"统计分析");
-            jDialog.setBounds(600,250,300,400);
-            
-
-            //2.设置对话框面板内容
-            JPanel jPanel = new JPanel();
-            jPanel.setSize(300,400);
-            jPanel.setBounds(0,0,720,540);
-
-            JComboBox<String> jComboBox = new JComboBox<String>();
-            jComboBox.addItem(new String("标签1"));
-            jComboBox.setSize(200, 20);
-            
-            JButton yes = new JButton("删除");
-            yes.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jDialog.setVisible(false);
-                }
-            });
-            
-            // jPanel.setLayout(new GridLayout(2,1));
-            jPanel.add(yes);
-            jPanel.add(jComboBox);
-            jDialog.add(jPanel);
-            
-            jDialog.setVisible(true);
+        	removeLabelDialog = new RemoveLabelDialog(db.getLabelList()); 
+        	removeLabelDialog.show(frame, true);
+        	
+        	Label label = removeLabelDialog.getLabel();
+        	if (label != null) {
+        		tools.removeLabel(label);
+        		reloadLabels();
+        	}
         }
     }
     
@@ -317,7 +303,6 @@ public class MaintainFrame {
         	if (label != null) {
         		tools.addLabel(label);
         		reloadLabels();
-        		System.out.println("add");
         	}
         }
     }
