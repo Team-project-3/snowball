@@ -23,6 +23,8 @@ public class MarkFrame {
     private DataBank db;
     private Tools tools;
     private AnalyseDialog analyseDialog;
+    private JList<String> jList;
+    private JPanel jPanel;
     
     public void buildFrame() {
     	db = DataBank.getInstence();
@@ -59,7 +61,7 @@ public class MarkFrame {
 
 
       //3.面板评论内容
-        JPanel jPanel = new JPanel(null);
+        jPanel = new JPanel(null);
         jPanel.setVisible(true);
         jPanel.setBounds(0,0,720,540);
         
@@ -73,7 +75,7 @@ public class MarkFrame {
 
         String[] strData = arrData.toArray(new String[len]);
         JTextArea jTextArea = new JTextArea("评论内容\n");
-        JList<String> jList = new JList<String>();
+        jList = new JList<String>();
         Border border = BorderFactory.createLineBorder(Color.BLACK,2);
 
         jList.setBounds(5,0,540,270);
@@ -83,12 +85,27 @@ public class MarkFrame {
         jList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+            	ArrayList<String> arrData = new ArrayList<>();
+                ArrayList<Comment> comments = db.getCommentList();
+                
+                int len = comments.size();
+                for(int i = 0; i < len; i++){
+                    arrData.add(comments.get(i).getContent());
+                }
+
+                String[] strData = arrData.toArray(new String[len]);
+            	
                 int index = jList.getSelectedIndex();
+                if(index < 0 || index >= len) {
+                	return;
+                }
                 jTextArea.setText(strData[index]);
             }
         });
         jList.setBorder(border);
-        jPanel.add(jList);
+        JScrollPane jList2 = new JScrollPane(jList);
+        jList2.setBounds(5,0,540,270);
+        jPanel.add(jList2);
 
         //4.面板标签内容
         JTextArea labelTextArea = new JTextArea("标签");
@@ -109,6 +126,8 @@ public class MarkFrame {
         public void actionPerformed(ActionEvent e) {
            ImportDialog id = new ImportDialog(markFrame);
            id.show();
+           
+           reloadDataBank();
         }
     }
     
@@ -135,5 +154,21 @@ public class MarkFrame {
         	analyseDialog = new AnalyseDialog(labels, table); 
         	analyseDialog.show(frame);
         }
+    }
+    
+    
+    private void reloadDataBank() {
+    	ArrayList<String> arrData = new ArrayList<>();
+        ArrayList<Comment> comments = db.getCommentList();
+        
+        int len = comments.size();
+        System.out.println(len);
+        for(int i = 0; i < len; i++){
+            arrData.add(comments.get(i).getContent());
+        }
+
+        String[] strData = arrData.toArray(new String[len]);
+        jList.setListData(strData);
+        jList.repaint();
     }
 }

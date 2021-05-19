@@ -10,11 +10,14 @@ import com.data.DataBank;
 import com.data.Label;
 import com.data.Tools;
 
+import jxl.read.biff.BiffException;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -28,6 +31,8 @@ public class MaintainFrame {
     private ManagerDialog managerDialog;
     private DownloadDialog downloadDialog;
     private AnalyseDialog analyseDialog;
+    private JList<String> jList;
+    private JPanel jPanel;
 
     public void buildFrame() {
     	db = DataBank.getInstence();
@@ -80,7 +85,7 @@ public class MaintainFrame {
 
 
         //3.面板评论内容
-        JPanel jPanel = new JPanel(null);
+        jPanel = new JPanel(null);
         jPanel.setVisible(true);
         jPanel.setBounds(0,0,720,540);
         
@@ -94,7 +99,7 @@ public class MaintainFrame {
 
         String[] strData = arrData.toArray(new String[len]);
         JTextArea jTextArea = new JTextArea("评论内容\n");
-        JList<String> jList = new JList<String>();
+        jList = new JList<String>();
         Border border = BorderFactory.createLineBorder(Color.BLACK,2);
 
         jList.setBounds(5,0,540,270);
@@ -104,12 +109,27 @@ public class MaintainFrame {
         jList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+            	ArrayList<String> arrData = new ArrayList<>();
+                ArrayList<Comment> comments = db.getCommentList();
+                
+                int len = comments.size();
+                for(int i = 0; i < len; i++){
+                    arrData.add(comments.get(i).getContent());
+                }
+
+                String[] strData = arrData.toArray(new String[len]);
+            	
                 int index = jList.getSelectedIndex();
+                if(index < 0 || index >= len) {
+                	return;
+                }
                 jTextArea.setText(strData[index]);
             }
         });
         jList.setBorder(border);
-        jPanel.add(jList);
+        JScrollPane jList2 = new JScrollPane(jList);
+        jList2.setBounds(5,0,540,270);
+        jPanel.add(jList2);
 
         //4.面板标签内容
         JTextArea labelTextArea = new JTextArea("标签");
@@ -120,6 +140,7 @@ public class MaintainFrame {
         //5.面板内容文本域
         jTextArea.setBorder(border);
         jTextArea.setBounds(5,270,690,190);
+        jTextArea.setLineWrap(true);
         jPanel.add(jTextArea);
         maintainFrame.setContentPane(jPanel);
 
@@ -131,6 +152,8 @@ public class MaintainFrame {
         public void actionPerformed(ActionEvent e) {
            ImportDialog id = new ImportDialog(maintainFrame);
            id.show();
+           
+           reloadDataBank();
         }
     }
     
@@ -144,6 +167,7 @@ public class MaintainFrame {
     
     private class DownLoadActionListener implements ActionListener {
     	private Frame frame;
+    	private String downloadID;
     	
     	public DownLoadActionListener(Frame frame) {
     		this.frame = frame;
@@ -153,11 +177,45 @@ public class MaintainFrame {
         	downloadDialog = new DownloadDialog();
         	downloadDialog.show(frame);
         	
-        	String downloadID = downloadDialog.getDownloadID();
+        	downloadID = downloadDialog.getDownloadID();
         	if (downloadID != null) {
-        		tools.downloadData(downloadID);
+        		try {
+					tools.downloadData(downloadID);
+					Ask ask = new Ask();
+					ask.start();
+				} catch (BiffException | InterruptedException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
         	}
         }
+    	
+    	private class Ask implements Runnable{
+    		private Thread t;
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+			         while(!tools.getDownloading().get(downloadID).equals("已完成")) {
+			            // 让线程睡眠一会
+			            Thread.sleep(500);
+			         }
+			         reloadDataBank();
+			      }catch (InterruptedException e) {
+			         System.out.println("Thread " +  "Ask" + " interrupted.");
+			      }
+			}
+			
+			public void start () {
+			      System.out.println("Starting asking");
+			      if (t == null) {
+			         t = new Thread (this, "ask");
+			         t.start ();
+			      }
+			   }
+    		
+    	}
     }
     
     private class ManagerActionListener implements ActionListener {
@@ -170,6 +228,7 @@ public class MaintainFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             Map<String, String> table = tools.getDownloading();
+            managerDialog = new ManagerDialog();
             
             managerDialog.setDownLoadList(table);
             managerDialog.show(frame);
@@ -244,5 +303,20 @@ public class MaintainFrame {
         	if (label != null)
         		tools.addLabel(label);
         }
+    }
+
+    private void reloadDataBank() {
+    	ArrayList<String> arrData = new ArrayList<>();
+        ArrayList<Comment> comments = db.getCommentList();
+        
+        int len = comments.size();
+        System.out.println(len);
+        for(int i = 0; i < len; i++){
+            arrData.add(comments.get(i).getContent());
+        }
+
+        String[] strData = arrData.toArray(new String[len]);
+        jList.setListData(strData);
+        jList.repaint();
     }
 }

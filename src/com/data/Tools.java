@@ -2,11 +2,14 @@ package com.data;
 
 import manager.Manager;
 
+import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.JList;
 
 import jxl.Cell;
 import jxl.Sheet;
@@ -37,111 +40,112 @@ public class Tools {
 	}
 	
 	public void importData(String file_path) throws BiffException, IOException {
+		DataBank db = DataBank.getInstence();
+		db.getCommentList().clear();
+		db.getLabelList().clear();
+		//ArrayList<Comment> commentList = new ArrayList<Comment>();
+		//ArrayList<com.data.Label> labelList = db.getLabelList();
 		
-		//1. ���XLS�ļ�
+		//1. 获得XLS文件
 		 Workbook workbook=Workbook.getWorkbook(new File(file_path)); 
-	     //2:��ȡ��һ�����sheet
+	     //2:获取第一个工作表sheet
 	     Sheet sheetComment=workbook.getSheet(0);
 	     Sheet sheetLabel = workbook.getSheet(1);
-	     //3:��ȡ���
+	     //3:获取数据
 	     
-	     //3.1 ��ȡ��ǩ 
+	     //3.1 获取标签 
 	     for(int i=0;i<sheetLabel.getRows();i++){
 	    	 com.data.Label label = new com.data.Label();
-	    	 ArrayList<String> labelOptions = new ArrayList<String>();//��ǩѡ��
+	    	 ArrayList<String> labelOptions = new ArrayList<String>();//标签选项
 	 
-	    	 Cell labelContent =sheetLabel.getCell(0,i); //��ǩ����
-	    	System.out.print(labelContent.getContents()+"  ");
+	    	 Cell labelContent =sheetLabel.getCell(0,i); //标签内容
+//	    	System.out.print(labelContent.getContents()+"  ");
 	         for(int j=0;j<sheetLabel.getColumns()-1;j++){
 	              Cell celloption=sheetLabel.getCell(j+1,i);
 	              if(celloption.getContents()==null) {
 	            	  break;
 	              }
 	              labelOptions.add(celloption.getContents());
-	              System.out.print(celloption.getContents()+"  ");
+//	              System.out.print(celloption.getContents()+"  ");
 	          }
-	         System.out.println();
-	          label.setContent(labelContent.getContents());//��ǩ����
+//	         System.out.println();
+	          label.setContent(labelContent.getContents());//标签内容
 	          label.setOptions(labelOptions);
 	          db.addLabel(label);
 	     }  
 	     
-	     //3.2 ��ȡ����
+	     //3.2 获取内容
 	     for(int i=1;i<sheetComment.getRows();i++){
 	    	 Comment comment = new Comment();
 	    	 ArrayList<Integer> commentOptions = new ArrayList<Integer>();
-	    	 Cell commentContent=sheetComment.getCell(0,i);//��������
-	    	 System.out.print(commentContent.getContents()+"  ");
+	    	 Cell commentContent=sheetComment.getCell(0,i);//评论内容
+//	    	 System.out.print(commentContent.getContents()+"  ");
 	    	 for(int j=0;j<sheetComment.getColumns()-1;j++) {
 	    		 Cell commentOption = sheetComment.getCell(j+1,i);
 	    		 commentOptions.add(Integer.parseInt(commentOption.getContents()));
-	    		 System.out.print(commentOption.getContents()+"  ");
+//	    		 System.out.print(commentOption.getContents()+"  ");
 	    	 }
-	    	 System.out.println();
+//	    	 System.out.println();
 	    	 comment.setContent(commentContent.getContents());
 	    	 comment.setLabelArrayList(commentOptions);
 	    	 db.addComment(comment);
 	     }  
-	     //4.�رչ���
+	     //4.关闭工作簿
 	      workbook.close();	
 	}
 	
 	public void exportData(String dir_path, String filename) throws IOException, RowsExceededException, WriteException {
-		DataBank db = DataBank.getInstence();
-		ArrayList<Comment> commentList = new ArrayList<Comment>();
-		//评论
-		ArrayList<Integer> optionsComment1 = new ArrayList<Integer>();
-		ArrayList<Integer> optionsComment2 = new ArrayList<Integer>();
-		optionsComment1.add(0);
-		optionsComment1.add(0);
-		optionsComment2.add(0);
-		optionsComment2.add(2);
-		commentList.add(new Comment("股票涨势很好",optionsComment1));
-		commentList.add(new Comment("股票涨势还差点",optionsComment2));
-	
-		//标签
-		ArrayList<com.data.Label> labelList = db.getLabelList();
-		ArrayList<String> optionslabel1 = new ArrayList<String>();
-		ArrayList<String> optionslabel2 = new ArrayList<String>();
-		optionslabel1.add("是");
-		optionslabel1.add("否");
-		optionslabel2.add("正面");
-		optionslabel2.add("中性");
-		optionslabel2.add("负面");
-		labelList.add(new com.data.Label(1,"评论是否与股票相关？",optionslabel1));
-		labelList.add(new com.data.Label(2,"评论是正面、中性还是负面？",optionslabel2));
-		
-		//导出数据为.xls文件
-		File filepath = new File(dir_path);
-		filepath.mkdirs();
-		File file =new File(filepath,filename);
-		WritableWorkbook wwb = Workbook.createWorkbook(file);
-		WritableSheet ws = wwb.createSheet("commentData", 0);
-		
-		//1.写入表头
-		jxl.write.Label CommentHead = new jxl.write.Label(0, 0, "评论");
-		ws.addCell((WritableCell) CommentHead);
-		for(int i=0;i<labelList.size();i++) {
-			jxl.write.Label labelHead = new jxl.write.Label(i+1,0, labelList.get(i).getContent());
-			ws.addCell((WritableCell) labelHead);
-		}
-		
-		//2.写入内容
-		
-		for(int i =0;i<commentList.size();i++) { 
-			jxl.write.Label commentContent = new jxl.write.Label(0,i+1,commentList.get(i).getContent()); 
-			ws.addCell((WritableCell) commentContent); 
-		} 
-		
-		for(int i =0;i<commentList.size();i++){ 
-			for(int j=0;j<labelList.size();j++) { 
-				jxl.write.Label labelContent = new jxl.write.Label(j+1,i+1,labelList.get(i).getOptions().get(commentList.get(i).getLabelList().get(j) ));
-				ws.addCell((WritableCell) labelContent); 
-			} 
-		}
+		//从DataBank中获取数据
+				DataBank db = DataBank.getInstence();
+				ArrayList<Comment> commentList = db.getCommentList();	
+				ArrayList<com.data.Label> labelList = db.getLabelList();
+				
+				//1.创建工作溥，导出数据为.xls文件
+				File filepath = new File(dir_path);
+				filepath.mkdirs();
+				File file =new File(filepath,filename);
+				WritableWorkbook wwb = Workbook.createWorkbook(file);
+				WritableSheet wsComment = wwb.createSheet("commentData", 0);//存评论
+				WritableSheet wsLabel = wwb.createSheet("labelData", 1);//存标签
+				
+				//1.导出标签
+				for(int i=0;i<labelList.size();i++) {
+					jxl.write.Label labelContent = new jxl.write.Label(0,i, labelList.get(i).getContent());
+					wsLabel.addCell((WritableCell) labelContent);
+					for(int j=0;j<labelList.get(i).getOptions().size();j++) {
+						jxl.write.Label labelOption = new jxl.write.Label(j+1,i, labelList.get(i).getOptions().get(j));
+						wsLabel.addCell((WritableCell) labelOption);
+					}
+				}
+				
+				//2.导出评论
+				//2.1.写入表头
+				jxl.write.Label CommentHead = new jxl.write.Label(0, 0, "评论");
+				wsComment.addCell((WritableCell) CommentHead);
+				for(int i=0;i<labelList.size();i++) {
+					String sb  = labelList.get(i).getContent();
+					for(int j=0;j<labelList.get(i).getOptions().size();j++) {
+						sb = sb +"  "+j+"."+labelList.get(i).getOptions().get(j);
+					}
+					jxl.write.Label labelHead = new jxl.write.Label(i+1,0, sb);
+					wsComment.addCell((WritableCell) labelHead);
+				}
+				
+				//2.2.写入内容
+				for(int i =0;i<commentList.size();i++) { 
+					jxl.write.Label commentContent = new jxl.write.Label(0,i+1,commentList.get(i).getContent()); 
+					wsComment.addCell((WritableCell) commentContent); 
+				} 
+				
+				for(int i =0;i<commentList.size();i++){ 
+					for(int j=0;j<labelList.size();j++) { 
+						jxl.write.Label labelContent = new jxl.write.Label(j+1,i+1,commentList.get(i).getLabelList().get(j).toString());
+						wsComment.addCell((WritableCell) labelContent); 
+					} 
+				}
 
-		wwb.write();// 写入数据
-		wwb.close();
+				wwb.write();// 写入数据
+				wwb.close();
 	}
 	
 	public void addLabel(Label label) {
@@ -190,6 +194,8 @@ public class Tools {
 		Map<Label, ArrayList<Integer>> table = new HashMap<>();
 		ArrayList<Comment> comments = this.db.getCommentList();
 		ArrayList<Label> labels = this.db.getLabelList();
+		if (labels.size() < 1 || comments.size() < 1) return table;
+		
 		
 		int size = labels.size();
 		for (int i=0; i<size; ++i) {
@@ -202,7 +208,11 @@ public class Tools {
 			
 			// 统计
 			for (Comment comment : comments) {
-				labelSum.set(comment.getLabelList().get(i), labelSum.get(comment.getLabelList().get(i))+1);
+				int option = comment.getLabelList().get(i);
+				if (option < 0) {
+					continue;
+				}
+				labelSum.set(comment.getLabelList().get(i), labelSum.get(option)+1);
 			}
 			
 			table.put(labels.get(i), labelSum);

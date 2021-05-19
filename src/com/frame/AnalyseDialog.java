@@ -40,8 +40,13 @@ public class AnalyseDialog{
 	
 	public AnalyseDialog(ArrayList<Label> labels, Map<Label, ArrayList<Integer>> table) {
 		this.table = table;
-		this.selectLabel = labels.get(0);
 		this.labels = labels;
+		
+		if(labels.size() < 1) {
+			this.selectLabel = null;
+		} else {
+			this.selectLabel = labels.get(0);
+		}
 		
 		genPic();
 		
@@ -81,6 +86,11 @@ public class AnalyseDialog{
 	
 	private void genPic() {
 		DefaultPieDataset pds = new DefaultPieDataset();
+		if (selectLabel == null) {
+			createPieChart(pds, picPath);
+			return;
+		}
+		
 		int len = table.get(selectLabel).size();
 		ArrayList<String> options = selectLabel.getOptions();
 		ArrayList<Integer> labelSum = table.get(selectLabel);

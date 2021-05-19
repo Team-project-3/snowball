@@ -1,10 +1,13 @@
 ﻿package manager;
+import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.JList;
 
 import com.data.Comment;
 import com.data.DataBank;
@@ -21,6 +24,7 @@ public class Manager extends Thread {
 	private static Map<String, String> states = new HashMap<>();//状态 0失败 1成功
 	private String code;
 	private DataBank db;
+	JList jList;
 	
     
 	public Manager(String code, DataBank db){
@@ -46,10 +50,10 @@ public class Manager extends Thread {
     	    	 comment.setContent(commentContent.getContents());
     	    	 db.addComment(comment);
     	     }
+    		db.getLabelList().clear();
     		//System.out.println(db.getCommentList());
     		File f=new File("./"+code+".xls");
 			f.delete();
-        	
 
         }catch (Exception e){
             e.printStackTrace();

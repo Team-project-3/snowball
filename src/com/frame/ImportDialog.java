@@ -67,6 +67,7 @@ public class ImportDialog {
 							tool.importData(getFilePath());
 						} catch (BiffException | IOException e1) {
 							// TODO Auto-generated catch block
+							System.out.print(getFilePath());
 							e1.printStackTrace();
 						} 
 		            }
