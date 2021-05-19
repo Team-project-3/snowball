@@ -33,6 +33,9 @@ public class MaintainFrame {
     private AnalyseDialog analyseDialog;
     private JList<String> jList;
     private JPanel jPanel;
+    private JPanel labelPanel;
+    private ArrayList<ArrayList<JRadioButton>> labelMap;
+    private int index=-1;
 
     public void buildFrame() {
     	db = DataBank.getInstence();
@@ -107,6 +110,8 @@ public class MaintainFrame {
         jList.setFont(Font.getFont("楷体"));
         jList.setListData(strData);
         jList.addListSelectionListener(new ListSelectionListener() {
+        	private boolean flag = true;
+        	
             @Override
             public void valueChanged(ListSelectionEvent e) {
             	ArrayList<String> arrData = new ArrayList<>();
@@ -119,11 +124,19 @@ public class MaintainFrame {
 
                 String[] strData = arrData.toArray(new String[len]);
             	
-                int index = jList.getSelectedIndex();
+                index = jList.getSelectedIndex();
+                if(!flag) {
+                	flag = !flag;
+                	return;
+                }
+                reloadLabels();
+                
                 if(index < 0 || index >= len) {
+                	System.out.print(index);
                 	return;
                 }
                 jTextArea.setText(strData[index]);
+                flag = !flag;
             }
         });
         jList.setBorder(border);
@@ -132,10 +145,11 @@ public class MaintainFrame {
         jPanel.add(jList2);
 
         //4.面板标签内容
-        JTextArea labelTextArea = new JTextArea("标签");
-        labelTextArea.setBorder(border);
-        labelTextArea.setBounds(545,0,150,270);
-        jPanel.add(labelTextArea);
+        labelPanel = new JPanel();
+        labelPanel.setBounds(550,0,145,250);
+        reloadLabels();
+        labelPanel.setVisible(true);
+        jPanel.add(labelPanel);
 
         //5.面板内容文本域
         jTextArea.setBorder(border);
@@ -153,7 +167,9 @@ public class MaintainFrame {
            ImportDialog id = new ImportDialog(maintainFrame);
            id.show();
            
-           reloadDataBank();
+           reloadComments();
+           reloadLabels();
+           System.out.println("import");
         }
     }
     
@@ -184,7 +200,6 @@ public class MaintainFrame {
 					Ask ask = new Ask();
 					ask.start();
 				} catch (BiffException | InterruptedException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
         	}
@@ -195,13 +210,12 @@ public class MaintainFrame {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				try {
 			         while(!tools.getDownloading().get(downloadID).equals("已完成")) {
 			            // 让线程睡眠一会
 			            Thread.sleep(500);
 			         }
-			         reloadDataBank();
+			         reloadComments();
 			      }catch (InterruptedException e) {
 			         System.out.println("Thread " +  "Ask" + " interrupted.");
 			      }
@@ -266,7 +280,7 @@ public class MaintainFrame {
             jPanel.setSize(300,400);
             jPanel.setBounds(0,0,720,540);
 
-            JComboBox jComboBox = new JComboBox<String>();
+            JComboBox<String> jComboBox = new JComboBox<String>();
             jComboBox.addItem(new String("标签1"));
             jComboBox.setSize(200, 20);
             
@@ -274,7 +288,7 @@ public class MaintainFrame {
             yes.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    jDialog.show(false);
+                    jDialog.setVisible(false);
                 }
             });
             
@@ -297,15 +311,18 @@ public class MaintainFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
         	addLabelDialog = new AddLabelDialog(); 
-        	addLabelDialog.show(frame);
+        	addLabelDialog.show(frame, true);
         	
         	Label label = addLabelDialog.getLabel();
-        	if (label != null)
+        	if (label != null) {
         		tools.addLabel(label);
+        		reloadLabels();
+        		System.out.println("add");
+        	}
         }
     }
 
-    private void reloadDataBank() {
+    private void reloadComments() {
     	ArrayList<String> arrData = new ArrayList<>();
         ArrayList<Comment> comments = db.getCommentList();
         
@@ -318,5 +335,65 @@ public class MaintainFrame {
         String[] strData = arrData.toArray(new String[len]);
         jList.setListData(strData);
         jList.repaint();
+    }
+    
+    private void reloadLabels(){
+    	ArrayList<Label> labelList = db.getLabelList();
+    	int labelSize = labelList.size();
+    	ArrayList<Integer> labelSelect;
+    	if (index < 0) {
+    		labelSelect = new ArrayList<>();
+    		for (int i=0; i<labelSize; ++i) {
+    			labelSelect.add(-1);
+    		}
+    	} else {
+    		labelSelect = db.getCommentList().get(index).getLabelList();
+    	}
+    	labelPanel.removeAll();
+    	labelMap = new ArrayList<>();
+//    	System.out.println(labelSize);
+    	// 第i个标签类
+        for(int i=0; i < labelSize; i++){
+            JLabel label = new JLabel(labelList.get(i).getContent());
+            label.setVisible(true);
+            labelPanel.add(label);
+            
+            ArrayList<JRadioButton> jrbList = new ArrayList<>();
+            ButtonGroup BG = new ButtonGroup();
+            // 第j个选项
+//            System.out.println(labelList.get(i).getOptions().size());
+            for(int j=0; j < labelList.get(i).getOptions().size(); j++){
+                JRadioButton jrb = new JRadioButton(labelList.get(i).getOptions().get(j));
+                if(labelSelect.get(i) == j) {
+                	jrb.setSelected(true);
+                } else {
+                	jrb.setSelected(false);
+                	jrb.setEnabled(false);
+                }
+                jrb.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						for (int i = 0; i < labelMap.size(); ++i) {
+							for (int j = 0; j < labelMap.get(i).size(); ++j) {
+								if (e.getSource() == labelMap.get(i).get(j)) {
+									db.getCommentList().get(index).getLabelList().set(i, j);
+									return;
+								}
+							}
+						}
+						
+					}
+                	
+                });
+                
+                BG.add(jrb);
+                jrbList.add(jrb);
+                labelPanel.add(jrb);
+            }
+            
+            labelMap.add(jrbList);
+        }
+        labelPanel.repaint();
     }
 }

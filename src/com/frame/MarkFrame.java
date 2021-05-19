@@ -25,6 +25,9 @@ public class MarkFrame {
     private AnalyseDialog analyseDialog;
     private JList<String> jList;
     private JPanel jPanel;
+    private JPanel labelPanel;
+    private ArrayList<ArrayList<JRadioButton>> labelMap;
+    private int index=-1;
     
     public void buildFrame() {
     	db = DataBank.getInstence();
@@ -83,6 +86,8 @@ public class MarkFrame {
         jList.setFont(Font.getFont("楷体"));
         jList.setListData(strData);
         jList.addListSelectionListener(new ListSelectionListener() {
+        	private boolean flag = true;
+        	
             @Override
             public void valueChanged(ListSelectionEvent e) {
             	ArrayList<String> arrData = new ArrayList<>();
@@ -95,11 +100,19 @@ public class MarkFrame {
 
                 String[] strData = arrData.toArray(new String[len]);
             	
-                int index = jList.getSelectedIndex();
+                index = jList.getSelectedIndex();
+                if(!flag) {
+                	flag = !flag;
+                	return;
+                }
+                reloadLabels();
+                
                 if(index < 0 || index >= len) {
+                	System.out.print(index);
                 	return;
                 }
                 jTextArea.setText(strData[index]);
+                flag = !flag;
             }
         });
         jList.setBorder(border);
@@ -108,10 +121,11 @@ public class MarkFrame {
         jPanel.add(jList2);
 
         //4.面板标签内容
-        JTextArea labelTextArea = new JTextArea("标签");
-        labelTextArea.setBorder(border);
-        labelTextArea.setBounds(545,0,150,270);
-        jPanel.add(labelTextArea);
+        labelPanel = new JPanel();
+        labelPanel.setBounds(550,0,145,250);
+        reloadLabels();
+        labelPanel.setVisible(true);
+        jPanel.add(labelPanel);
 
         //5.面板内容文本域
         jTextArea.setBorder(border);
@@ -170,5 +184,62 @@ public class MarkFrame {
         String[] strData = arrData.toArray(new String[len]);
         jList.setListData(strData);
         jList.repaint();
+    }
+
+    private void reloadLabels(){
+    	ArrayList<Label> labelList = db.getLabelList();
+    	int labelSize = labelList.size();
+    	ArrayList<Integer> labelSelect;
+    	if (index < 0) {
+    		labelSelect = new ArrayList<>();
+    		for (int i=0; i<labelSize; ++i) {
+    			labelSelect.add(-1);
+    		}
+    	} else {
+    		labelSelect = db.getCommentList().get(index).getLabelList();
+    	}
+    	labelPanel.removeAll();
+    	labelMap = new ArrayList<>();
+    	// 第i个标签类
+        for(int i=0; i < labelSize; i++){
+            JLabel label = new JLabel(labelList.get(i).getContent());
+            label.setVisible(true);
+            labelPanel.add(label);
+            
+            ArrayList<JRadioButton> jrbList = new ArrayList<>();
+            ButtonGroup BG = new ButtonGroup();
+            // 第j个选项
+            for(int j=0; j < labelList.get(i).getOptions().size(); j++){
+                JRadioButton jrb = new JRadioButton(labelList.get(i).getOptions().get(j));
+                if(labelSelect.get(i) == j) {
+                	jrb.setSelected(true);
+                } else {
+                	jrb.setSelected(false);
+                }
+                jrb.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						for (int i = 0; i < labelMap.size(); ++i) {
+							for (int j = 0; j < labelMap.get(i).size(); ++j) {
+								if (e.getSource() == labelMap.get(i).get(j)) {
+									db.getCommentList().get(index).getLabelList().set(i, j);
+									return;
+								}
+							}
+						}
+						
+					}
+                	
+                });
+                
+                BG.add(jrb);
+                jrbList.add(jrb);
+                labelPanel.add(jrb);
+            }
+            
+            labelMap.add(jrbList);
+        }
+        labelPanel.repaint();
     }
 }
