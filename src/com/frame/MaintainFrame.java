@@ -112,7 +112,7 @@ public class MaintainFrame {
         jList.setFont(Font.getFont("楷体"));
         jList.setListData(strData);
         jList.addListSelectionListener(new ListSelectionListener() {
-        	private boolean flag = true;
+//        	private boolean flag = true;
         	
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -127,10 +127,10 @@ public class MaintainFrame {
                 String[] strData = arrData.toArray(new String[len]);
             	
                 index = jList.getSelectedIndex();
-                if(!flag) {
-                	flag = !flag;
-                	return;
-                }
+//                if(!flag) {
+//                	flag = !flag;
+//                	return;
+//                }
                 reloadLabels();
                 
                 if(index < 0 || index >= len) {
@@ -138,7 +138,7 @@ public class MaintainFrame {
                 	return;
                 }
                 jTextArea.setText(strData[index]);
-                flag = !flag;
+//                flag = !flag;
             }
         });
         jList.setBorder(border);
