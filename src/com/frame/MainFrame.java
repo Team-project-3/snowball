@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
 public class MainFrame {
     private JFrame mainFrame;
@@ -19,7 +18,7 @@ public class MainFrame {
         //1.设置frame参数
         mainFrame.setBounds(500,200,720,540);
         mainFrame.setVisible(true);
-        mainFrame.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //2.设置面板
         JPanel mainPanel = new JPanel(null);
@@ -54,9 +53,11 @@ public class MainFrame {
             if(e.getActionCommand().equals("数据维护者")){
                 //mainFrame.setVisible(false);
                 new MaintainFrame().buildFrame();
+                mainFrame.dispose();
             }else{
                 //mainFrame.setVisible(false);
                 new MarkFrame().buildFrame();
+                mainFrame.dispose();
             }
         }
     }
