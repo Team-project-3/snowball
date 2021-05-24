@@ -41,39 +41,25 @@ def func(code):
         sheets = rb.sheet_names()  # 获取工作簿中的所有工作表名字，形成列表元素
         sheet_old = rb.sheet_by_name(sheets[0])  # 通过sheets[0]工作表名称获取工作簿中所有工作表中的的第一个工作表
         rows_old = sheet_old.nrows
-
-
-        '''
-        total=1
-        for page in range(1,maxPage+1):
-            params["page"]=str(page);
+        if(rows_old == 1): print("代码错误")
+        else:
+            params["page"]=str(maxPage);
+            #time.sleep(6);
             req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
             result=json.loads(req);
-            total=total+len(result['list'])
-        if rows_old==total:
-            print("爬取完整")
-        else:
-            print("爬取不完整")
-        '''
-        
-        
-        params["page"]=str(maxPage);
-        #time.sleep(6);
-        req=requests.get(url,params,headers=header).content.decode('utf-8');     #解码，并且去除str中影响json转换的字符（\n\rjsonp(...)）;
-        result=json.loads(req);
-        comment1 = sheet_old.row(rows_old-1)[3].value; 
-        pattern = re.compile(r'<[^>]+>',re.S)
-        comment2 = pattern.sub('', result['list'][len(result['list'])-1]['text'])
-        if comment1==comment2:
-            print("爬取完整")
-        elif sheet_old.row(rows_old-1)[2].value != maxPage:
-            print("爬取不完整")
-        else:
-            print("有新的评论，重新爬取")
-            os.remove(path)
+            comment1 = sheet_old.row(rows_old-1)[3].value; 
+            pattern = re.compile(r'<[^>]+>',re.S)
+            comment2 = pattern.sub('', result['list'][len(result['list'])-1]['text'])
+            if comment1==comment2:
+                print("爬取完整")
+            elif sheet_old.row(rows_old-1)[2].value != maxPage:
+                print("爬取不完整")
+            else:
+                print("有新的评论，重新爬取")
+                os.remove(path)
 
 
 if __name__ == '__main__':
     code=sys.argv[1]#java调用传进来的参数
     func(code)
-    #func("SH600415")
+    #func("123")

@@ -17,6 +17,7 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -204,6 +205,7 @@ public class MaintainFrame {
 					e1.printStackTrace();
 				}
         	}
+
         }
     	
     	private class Ask implements Runnable{
@@ -212,9 +214,15 @@ public class MaintainFrame {
 			@Override
 			public void run() {
 				try {
-			         while(!tools.getDownloading().get(downloadID).equals("已完成")) {
-			            // 让线程睡眠一会
-			            Thread.sleep(500);
+					while(!tools.getDownloading().get(downloadID).equals("已完成")) {
+						if(tools.getDownloading().get(downloadID).equals("代码错误")) {
+							//此处需要弹窗
+							JOptionPane.showMessageDialog(null, "You input is wrong");
+							tools.downloadDelete(downloadID);
+							break;
+						}
+						// 让线程睡眠一会
+						else Thread.sleep(500);
 			         }
 			         reloadComments();
 			      }catch (InterruptedException e) {
