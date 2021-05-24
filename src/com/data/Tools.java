@@ -2,14 +2,11 @@ package com.data;
 
 import manager.Manager;
 
-import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.JList;
 
 import jxl.Cell;
 import jxl.Sheet;
@@ -202,7 +199,7 @@ public class Tools {
 			// 初始化labelSum
 			ArrayList<Integer> labelSum = new ArrayList<>();
 			int len = labels.get(i).getOptions().size();
-			for(int j=0; j < len; ++j) {
+			for(int j=0; j <= len; ++j) {
 				labelSum.add(0);
 			}
 			
@@ -210,6 +207,7 @@ public class Tools {
 			for (Comment comment : comments) {
 				int option = comment.getLabelList().get(i);
 				if (option < 0) {
+					labelSum.set(len, labelSum.get(len)+1);
 					continue;
 				}
 				labelSum.set(comment.getLabelList().get(i), labelSum.get(option)+1);

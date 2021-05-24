@@ -19,7 +19,7 @@ import java.util.Map;
 import static javax.swing.WindowConstants.HIDE_ON_CLOSE;
 
 public class MarkFrame {
-    private JFrame markFrame = new JFrame("数据标注者");
+    public static JFrame markFrame = new JFrame("数据标注者");
     private DataBank db;
     private Tools tools;
     private AnalyseDialog analyseDialog;
@@ -57,13 +57,13 @@ public class MarkFrame {
 
 
         //2.3.统计菜单
-        JMenu jMenuTitle = new JMenu("统计");
+        JMenuItem jMenuTitle = new JMenuItem("统计");
         jMenuTitle.addActionListener(new AnalyseActionListener(markFrame));
         jmb.add(jMenuTitle);
         markFrame.setJMenuBar(jmb);
 
 
-      //3.面板评论内容
+        //3.面板评论内容
         jPanel = new JPanel(null);
         jPanel.setVisible(true);
         jPanel.setBounds(0,0,720,540);
@@ -86,7 +86,7 @@ public class MarkFrame {
         jList.setFont(Font.getFont("楷体"));
         jList.setListData(strData);
         jList.addListSelectionListener(new ListSelectionListener() {
-        	private boolean flag = true;
+//        	private boolean flag = true;
         	
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -101,10 +101,10 @@ public class MarkFrame {
                 String[] strData = arrData.toArray(new String[len]);
             	
                 index = jList.getSelectedIndex();
-                if(!flag) {
-                	flag = !flag;
-                	return;
-                }
+//                if(!flag) {
+//                	flag = !flag;
+//                	return;
+//                }
                 reloadLabels();
                 
                 if(index < 0 || index >= len) {
@@ -112,7 +112,7 @@ public class MarkFrame {
                 	return;
                 }
                 jTextArea.setText(strData[index]);
-                flag = !flag;
+//                flag = !flag;
             }
         });
         jList.setBorder(border);
@@ -130,6 +130,7 @@ public class MarkFrame {
         //5.面板内容文本域
         jTextArea.setBorder(border);
         jTextArea.setBounds(5,270,690,190);
+        jTextArea.setLineWrap(true);
         jPanel.add(jTextArea);
         markFrame.setContentPane(jPanel);
 

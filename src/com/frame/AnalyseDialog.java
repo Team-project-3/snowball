@@ -3,15 +3,12 @@ package com.frame;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -91,13 +88,16 @@ public class AnalyseDialog{
 			return;
 		}
 		
-		int len = table.get(selectLabel).size();
+		int len = table.get(selectLabel).size()-1;
 		ArrayList<String> options = selectLabel.getOptions();
 		ArrayList<Integer> labelSum = table.get(selectLabel);
 		
+		System.out.print("len:");
+		System.out.println(len);
 		for(int i=0; i<len; ++i) {
 			pds.setValue(options.get(i), labelSum.get(i));
 		}
+		pds.setValue("未标注", labelSum.get(len));
 		
 		createPieChart(pds, picPath);
 	}
