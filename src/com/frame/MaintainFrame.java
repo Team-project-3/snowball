@@ -115,7 +115,6 @@ public class MaintainFrame {
         jList.setFont(Font.getFont("楷体"));
         jList.setListData(strData);
         jList.addListSelectionListener(new ListSelectionListener() {
-//        	private boolean flag = true;
         	
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -130,18 +129,14 @@ public class MaintainFrame {
                 String[] strData = arrData.toArray(new String[len]);
             	
                 index = jList.getSelectedIndex();
-//                if(!flag) {
-//                	flag = !flag;
-//                	return;
-//                }
-                reloadLabels();
                 
                 if(index < 0 || index >= len) {
-                	System.out.print(index);
+//                	System.out.print(index);
                 	return;
                 }
+                reloadLabels();
+                
                 jTextArea.setText(strData[index]);
-//                flag = !flag;
             }
         });
         jList.setBorder(border);
@@ -322,7 +317,7 @@ public class MaintainFrame {
     	DefaultListModel<String> listModel = new DefaultListModel<>();
         ArrayList<Comment> comments = db.getCommentList();
         
-        ArrayList<Integer> redCols = new ArrayList<>(); 
+        redCols.clear();
         int len = comments.size();
         for(int i = 0; i < len; i++){
             listModel.addElement(comments.get(i).getContent());

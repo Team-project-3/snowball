@@ -88,7 +88,6 @@ public class MarkFrame {
         jList.setFont(Font.getFont("楷体"));
         jList.setListData(strData);
         jList.addListSelectionListener(new ListSelectionListener() {
-//        	private boolean flag = true;
         	
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -103,18 +102,14 @@ public class MarkFrame {
                 String[] strData = arrData.toArray(new String[len]);
             	
                 index = jList.getSelectedIndex();
-//                if(!flag) {
-//                	flag = !flag;
-//                	return;
-//                }
-                reloadLabels();
                 
                 if(index < 0 || index >= len) {
 //                	System.out.print(index);
                 	return;
                 }
+                reloadLabels();
+                
                 jTextArea.setText(strData[index]);
-//                flag = !flag;
             }
         });
         jList.setBorder(border);
