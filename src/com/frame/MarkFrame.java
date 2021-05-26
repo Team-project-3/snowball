@@ -9,6 +9,7 @@ import com.data.Comment;
 import com.data.DataBank;
 import com.data.Label;
 import com.data.Tools;
+import com.frame.MaintainFrame.MyRenderer;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,7 @@ public class MarkFrame {
     private JPanel jPanel;
     private JPanel labelPanel;
     private ArrayList<ArrayList<JRadioButton>> labelMap;
+    private ArrayList<Integer> redCols = new ArrayList<>(); 
     private int index=-1;
     
     public void buildFrame() {
@@ -108,7 +110,7 @@ public class MarkFrame {
                 reloadLabels();
                 
                 if(index < 0 || index >= len) {
-                	System.out.print(index);
+//                	System.out.print(index);
                 	return;
                 }
                 jTextArea.setText(strData[index]);
@@ -142,7 +144,7 @@ public class MarkFrame {
            ImportDialog id = new ImportDialog(markFrame);
            id.show();
            
-           reloadDataBank();
+           reloadComments();
         }
     }
     
@@ -172,19 +174,28 @@ public class MarkFrame {
     }
     
     
-    private void reloadDataBank() {
-    	ArrayList<String> arrData = new ArrayList<>();
+    private void reloadComments() {
+    	DefaultListModel<String> listModel = new DefaultListModel<>();
         ArrayList<Comment> comments = db.getCommentList();
         
+        redCols.clear();
         int len = comments.size();
-        System.out.println(len);
         for(int i = 0; i < len; i++){
-            arrData.add(comments.get(i).getContent());
+            listModel.addElement(comments.get(i).getContent());
+            
+            // 判断是否未标注
+            for(int tmp : comments.get(i).getLabelList()) {
+            	if(tmp < 0) {
+            		redCols.add(i);
+            		break;
+            	}
+            }
         }
 
-        String[] strData = arrData.toArray(new String[len]);
-        jList.setListData(strData);
+        jList.setModel(listModel);
+        jList.setCellRenderer(new MyRenderer(redCols, Color.RED));
         jList.repaint();
+
     }
 
     private void reloadLabels(){
@@ -225,6 +236,21 @@ public class MarkFrame {
 							for (int j = 0; j < labelMap.get(i).size(); ++j) {
 								if (e.getSource() == labelMap.get(i).get(j)) {
 									db.getCommentList().get(index).getLabelList().set(i, j);
+									
+									// 更新是否红底
+									boolean flag = true;
+									for(int tmp : db.getCommentList().get(index).getLabelList()) {
+						            	if(tmp < 0) {
+						            		flag = false;
+						            		break;
+						            	}
+						            }
+									if(flag) {
+										redCols.remove((Object)index);
+										jList.setCellRenderer(new MyRenderer(redCols, Color.RED));
+								        jList.repaint();
+									}
+									
 									return;
 								}
 							}
@@ -242,5 +268,30 @@ public class MarkFrame {
             labelMap.add(jrbList);
         }
         labelPanel.repaint();
+    }
+    
+    class MyRenderer extends DefaultListCellRenderer {
+    	private Color rowcolor;
+		private ArrayList<Integer> rows;
+
+		public MyRenderer(ArrayList<Integer> rows, Color color) {
+            this.rowcolor = color;
+            this.rows = rows;
+        }
+		
+		public Component getListCellRendererComponent(
+				JList list, Object value,
+	            int index, boolean isSelected, 
+	            boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			for (int i = 0; i < rows.size(); i++) {
+				if (index == rows.get(i)) {
+					setBackground(this.rowcolor);
+//	                setFont(getFont());
+	            }
+	        }
+	 
+	        return this;
+	    }
     }
 }

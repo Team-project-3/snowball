@@ -9,10 +9,12 @@ import com.data.Comment;
 import com.data.DataBank;
 import com.data.Label;
 import com.data.Tools;
+import com.frame.MarkFrame.MyRenderer;
 
 import jxl.read.biff.BiffException;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -38,6 +40,7 @@ public class MaintainFrame {
     private JPanel labelPanel;
     private ArrayList<ArrayList<JRadioButton>> labelMap;
     private int index=-1;
+    private ArrayList<Integer> redCols = new ArrayList<>(); 
 
     public void buildFrame() {
     	db = DataBank.getInstence();
@@ -316,18 +319,27 @@ public class MaintainFrame {
     }
 
     private void reloadComments() {
-    	ArrayList<String> arrData = new ArrayList<>();
+    	DefaultListModel<String> listModel = new DefaultListModel<>();
         ArrayList<Comment> comments = db.getCommentList();
         
+        ArrayList<Integer> redCols = new ArrayList<>(); 
         int len = comments.size();
-        System.out.println(len);
         for(int i = 0; i < len; i++){
-            arrData.add(comments.get(i).getContent());
+            listModel.addElement(comments.get(i).getContent());
+            
+            // 判断是否未标注
+            for(int tmp : comments.get(i).getLabelList()) {
+            	if(tmp < 0) {
+            		redCols.add(i);
+            		break;
+            	}
+            }
         }
 
-        String[] strData = arrData.toArray(new String[len]);
-        jList.setListData(strData);
+        jList.setModel(listModel);
+        jList.setCellRenderer(new MyRenderer(redCols, Color.RED));
         jList.repaint();
+
     }
     
     private void reloadLabels(){
@@ -361,7 +373,7 @@ public class MaintainFrame {
                 	jrb.setSelected(true);
                 } else {
                 	jrb.setSelected(false);
-                	jrb.setEnabled(false);
+//                	jrb.setEnabled(false);
                 }
                 jrb.addActionListener(new ActionListener() {
 
@@ -371,6 +383,21 @@ public class MaintainFrame {
 							for (int j = 0; j < labelMap.get(i).size(); ++j) {
 								if (e.getSource() == labelMap.get(i).get(j)) {
 									db.getCommentList().get(index).getLabelList().set(i, j);
+									
+									// 更新是否红底
+									boolean flag = true;
+									for(int tmp : db.getCommentList().get(index).getLabelList()) {
+						            	if(tmp < 0) {
+						            		flag = false;
+						            		break;
+						            	}
+						            }
+									if(flag) {
+										redCols.remove((Object)index);
+										jList.setCellRenderer(new MyRenderer(redCols, Color.RED));
+								        jList.repaint();
+									}
+									
 									return;
 								}
 							}
@@ -388,5 +415,30 @@ public class MaintainFrame {
             labelMap.add(jrbList);
         }
         labelPanel.repaint();
+    }
+    
+    class MyRenderer extends DefaultListCellRenderer {
+    	private Color rowcolor;
+		private ArrayList<Integer> rows;
+
+		public MyRenderer(ArrayList<Integer> rows, Color color) {
+            this.rowcolor = color;
+            this.rows = rows;
+        }
+		
+		public Component getListCellRendererComponent(
+				JList list, Object value,
+	            int index, boolean isSelected, 
+	            boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			for (int i = 0; i < rows.size(); i++) {
+				if (index == rows.get(i)) {
+					setBackground(this.rowcolor);
+//	                setFont(getFont());
+	            }
+	        }
+	 
+	        return this;
+	    }
     }
 }
