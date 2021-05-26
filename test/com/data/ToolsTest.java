@@ -53,9 +53,11 @@ class ToolsTest {
 
 	@Test
 	void testImportData() throws BiffException, IOException {
-		String filename = "D:\\Documents\\xueqiu\\data\\commentData.xls";
+		String filename1 = "D:\\Documents\\xueqiu\\data\\commentData.xls";
+		String filename2 = "D:\\Documents\\xueqiu\\newData\\commentData.xls";
 		Tools tool =new Tools(null);
-		tool.importData(filename);
+		tool.importData(filename1);
+		tool.importData(filename2);
 	}
 
 	@Test

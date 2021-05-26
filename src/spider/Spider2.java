@@ -21,9 +21,11 @@ public class Spider2 {
 	    p.waitFor();
 	    p.destroy();
 	    for(int i=0;i<3;i++) {
-	    	if(check(code)) {
-	    		return 1;//返回1代表成功
+	    	int tmp = check(code);
+	    	if(tmp==1) {//0:不存在，不完整，有新的 1:成功 2:代码错误
+	    		return 1;
 	    	}
+	    	else if(tmp==2) return 2;
 	    	else if(i<2){
 	    		p = Runtime.getRuntime().exec(command);
 	    	    System.out.println(code+":开始爬取");
@@ -37,7 +39,7 @@ public class Spider2 {
         }
 
 	
-	public static boolean check(String code) throws IOException, InterruptedException {
+	public static int check(String code) throws IOException, InterruptedException {
 		String[] command = new String[]{conv,cmd2,code};
 	    BufferedReader br = null;
 	    BufferedReader brError = null;
@@ -50,19 +52,23 @@ public class Spider2 {
             while ((line = br.readLine()) != null  || (line = brError.readLine()) != null) {
             	if(line.equals("文件不存在")) {
             		System.out.println(code+":文件不存在");
-                	return false;
+                	return 0;
                 }
                 else if(line.equals("爬取不完整")) {
                 	System.out.println(code+":爬取不完整");
-                	return false;
+                	return 0;
                 }
                 else if(line.equals("有新的评论，重新爬取")) {
                 	System.out.println(code+":有新的评论，重新爬取");
-                	return false;
+                	return 0;
+                }
+                else if(line.equals("代码错误")) {
+                	System.out.println(code+":代码错误");
+                	return 2;
                 }
                 else if(line.equals("爬取完整")) {
                 	System.out.println(code+":爬取完整");
-                	return true;
+                	return 1;
                 }
             }
 	    }catch(Exception e){
@@ -79,7 +85,7 @@ public class Spider2 {
 	    
 
 	    
-        return false;
+        return 0;
 	    }
 	
 	class InputStreamRunnable extends Thread {

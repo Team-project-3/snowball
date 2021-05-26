@@ -47,7 +47,7 @@ public class DownloadDialog {
 		        if(pattern.matcher(downloadID).matches()) {
 		        	dialog.dispose();
 		        } else {
-		        	
+		        	dialog.dispose();//先加着，不然输入错误的时候又不能前又不能后
 		        }
 			}
 			
