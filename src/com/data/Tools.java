@@ -40,52 +40,86 @@ public class Tools {
 	}
 	
 	public void importData(String file_path) throws BiffException, IOException {
-		DataBank db = DataBank.getInstence();
-		db.getCommentList().clear();
-		db.getLabelList().clear();
-		//ArrayList<Comment> commentList = new ArrayList<Comment>();
-		//ArrayList<com.data.Label> labelList = db.getLabelList();
-		
-		//1. 获得XLS文件
+		 DataBank db = DataBank.getInstence();
+		 
+		 //1. 获得XLS文件
 		 Workbook workbook=Workbook.getWorkbook(new File(file_path)); 
 	     //2:获取第一个工作表sheet
 	     Sheet sheetComment=workbook.getSheet(0);
 	     Sheet sheetLabel = workbook.getSheet(1);
 	     //3:获取数据
 	     
-	     //3.1 获取标签 
+	     //3.1 当db内容不为空时
+	     if(db.getLabelList().size()!=0&&db.getCommentList().size()!=0) {
+	    	//3.1.1.获取db中内容
+	    	 ArrayList<Comment> commentList = db.getCommentList();	
+	 		 ArrayList<com.data.Label> labelList = db.getLabelList();
+	 		 
+	 		 //3.1.2判断标签类是否一致，如果不一致，直接退出，不做db更新
+	    	 for(int i=0;i<sheetLabel.getRows();i++){
+		    	 Cell labelContent =sheetLabel.getCell(0,i); //标签内容
+		    	 if(!(labelList.get(i).getContent().equals(labelContent.getContents()))){
+		    		 return;
+		    	 }
+		     }
+	    	 
+	    	 //3.1.3 标签类一致，如果评论内容不一致，不做db更新；如果一致判断标注，标注一致不处理，不一致设为-1
+	    	  for(int i=1;i<sheetComment.getRows();i++){
+	 	    	 ArrayList<Integer> commentOptions = new ArrayList<Integer>();
+	 	    	 Cell commentContent=sheetComment.getCell(0,i);//评论内容
+	 	    	 //评论内容不一致,不做处理，保留DB数据
+	 	    	 if(!(commentContent.getContents().equals(commentList.get(i-1).getContent()))) {
+	 	    		 continue;
+	 	    	 }
+	 	    	 
+	 	    	 //评论内容一致，判断标注
+	 	    	 for(int j=1;j<sheetComment.getColumns();j++) {
+	 	    		 Cell commentOption = sheetComment.getCell(j,i);
+	 	    		 //标注不一致设为，更改db相应评论的标注为-1
+	 	    		 if(Integer.parseInt(commentOption.getContents())!=commentList.get(i-1).getLabelList().get(j-1)) {
+	 	    			commentList.get(i-1).getLabelList().set(j-1, -1);
+	 	    			System.out.println("标注不一致,位置("+i+","+j+")");
+	 	    		 }
+	 	    	 } 	    
+	 	     } 
+	    	 return ;		
+		 }
+	     
+	     
+	     //3.2 当db内容为空时，直接更新db
+	     //3.2.1 获取标签 
 	     for(int i=0;i<sheetLabel.getRows();i++){
 	    	 com.data.Label label = new com.data.Label();
 	    	 ArrayList<String> labelOptions = new ArrayList<String>();//标签选项
 	 
 	    	 Cell labelContent =sheetLabel.getCell(0,i); //标签内容
-//	    	System.out.print(labelContent.getContents()+"  ");
+	    	 System.out.print(labelContent.getContents()+"  ");
 	         for(int j=0;j<sheetLabel.getColumns()-1;j++){
 	              Cell celloption=sheetLabel.getCell(j+1,i);
-	              if(celloption.getContents()==null) {
+	              if(celloption.getContents().equals("")) {
 	            	  break;
 	              }
 	              labelOptions.add(celloption.getContents());
-//	              System.out.print(celloption.getContents()+"  ");
+	              System.out.print(celloption.getContents()+"  ");
 	          }
-//	         System.out.println();
+	         System.out.println();
 	          label.setContent(labelContent.getContents());//标签内容
 	          label.setOptions(labelOptions);
 	          db.addLabel(label);
 	     }  
 	     
-	     //3.2 获取内容
+	     //3.2.2 获取内容
 	     for(int i=1;i<sheetComment.getRows();i++){
 	    	 Comment comment = new Comment();
 	    	 ArrayList<Integer> commentOptions = new ArrayList<Integer>();
 	    	 Cell commentContent=sheetComment.getCell(0,i);//评论内容
-//	    	 System.out.print(commentContent.getContents()+"  ");
+	    	 System.out.print(commentContent.getContents()+"  ");
 	    	 for(int j=0;j<sheetComment.getColumns()-1;j++) {
 	    		 Cell commentOption = sheetComment.getCell(j+1,i);
 	    		 commentOptions.add(Integer.parseInt(commentOption.getContents()));
-//	    		 System.out.print(commentOption.getContents()+"  ");
+	    		 System.out.print(commentOption.getContents()+"  ");
 	    	 }
-//	    	 System.out.println();
+	    	 System.out.println();
 	    	 comment.setContent(commentContent.getContents());
 	    	 comment.setLabelArrayList(commentOptions);
 	    	 db.addComment(comment);
