@@ -144,7 +144,7 @@ public class MaintainFrame {
         jList2.setBounds(5,0,540,270);
         jPanel.add(jList2);
 
-        //4.面板标签内容
+      //4.面板标签内容
         labelPanel = new JPanel();
         labelPanel.setBounds(550,0,145,250);
         reloadLabels();
@@ -354,9 +354,12 @@ public class MaintainFrame {
 //    	System.out.println(labelSize);
     	// 第i个标签类
         for(int i=0; i < labelSize; i++){
+        	JPanel jp1 = new JPanel(), jp2 = new JPanel();
+        	jp1.setSize(145, 10);
+        	jp2.setSize(145, 10);
             JLabel label = new JLabel(labelList.get(i).getContent());
             label.setVisible(true);
-            labelPanel.add(label);
+            jp1.add(label);
             
             ArrayList<JRadioButton> jrbList = new ArrayList<>();
             ButtonGroup BG = new ButtonGroup();
@@ -401,10 +404,12 @@ public class MaintainFrame {
 					}
                 	
                 });
-                
                 BG.add(jrb);
                 jrbList.add(jrb);
-                labelPanel.add(jrb);
+                jp2.add(jrb);
+                
+                labelPanel.add(jp1);
+                labelPanel.add(jp2);
             }
             
             labelMap.add(jrbList);

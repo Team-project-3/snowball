@@ -209,9 +209,12 @@ public class MarkFrame {
     	labelMap = new ArrayList<>();
     	// 第i个标签类
         for(int i=0; i < labelSize; i++){
+        	JPanel jp1 = new JPanel(), jp2 = new JPanel();
+        	jp1.setSize(145, 10);
+        	jp2.setSize(145, 10);
             JLabel label = new JLabel(labelList.get(i).getContent());
             label.setVisible(true);
-            labelPanel.add(label);
+            jp1.add(label);
             
             ArrayList<JRadioButton> jrbList = new ArrayList<>();
             ButtonGroup BG = new ButtonGroup();
@@ -257,7 +260,10 @@ public class MarkFrame {
                 
                 BG.add(jrb);
                 jrbList.add(jrb);
-                labelPanel.add(jrb);
+                jp2.add(jrb);
+                
+                labelPanel.add(jp1);
+                labelPanel.add(jp2);
             }
             
             labelMap.add(jrbList);
