@@ -217,7 +217,7 @@ public class MaintainFrame {
 					while(!tools.getDownloading().get(downloadID).equals("已完成")) {
 						if(tools.getDownloading().get(downloadID).equals("代码错误")) {
 							//此处需要弹窗
-							JOptionPane.showMessageDialog(null, "You input is wrong");
+							JOptionPane.showMessageDialog(null, "股票代码错误，请重输");
 							tools.downloadDelete(downloadID);
 							break;
 						}
