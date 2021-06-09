@@ -5,6 +5,9 @@ import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.data.Comment;
 import com.data.DataBank;
 import com.data.Label;
@@ -32,6 +35,8 @@ public class MarkFrame {
     private int index=-1;
     
     public void buildFrame() {
+    	 Logger logger8 = LogManager.getLogger(AddLabelDialog.class.getName());
+	        logger8.info("用户进入数据标注对话框");
     	db = DataBank.getInstence();
     	tools = new Tools(db);
     	

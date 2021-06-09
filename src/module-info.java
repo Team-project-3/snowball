@@ -11,4 +11,5 @@ module snowball {
 	requires jxl;
 	requires org.junit.jupiter.api;
 	requires jfreechart;
+	requires org.apache.logging.log4j;
 }
