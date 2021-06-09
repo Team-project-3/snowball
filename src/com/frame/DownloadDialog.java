@@ -13,6 +13,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class DownloadDialog {
 	private JDialog dialog;
 	private String downloadID;
@@ -22,6 +25,8 @@ public class DownloadDialog {
 
 	// 该方法显示对话框
 	public void show(Frame frame) {
+		 Logger logger3 = LogManager.getLogger(AddLabelDialog.class.getName());
+	        logger3.info("用户进入下载对话框");
 		dialog = new JDialog(frame, "下载", true);
 		dialog.setBounds(600, 250, 300, 200);
 		
