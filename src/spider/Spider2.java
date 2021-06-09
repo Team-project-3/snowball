@@ -7,13 +7,14 @@ import java.io.InputStreamReader;
 
 public class Spider2 {
 	
-	static String cmd1 = "爬虫.py";
-	static String cmd2 = "爬虫检查.py";
-    static String conv = "python";
+	static String cmd1 = "爬虫.exe";
+	static String cmd2 = "爬虫检查.exe";
+    //static String conv = "python";
 	public int run(String code) throws IOException, InterruptedException {
 		//System.out.println(System.getProperty("user.dir"));//user.dir指定了当前的路径
-	    String[] command = new String[]{conv,cmd1,code};
-
+	    //String[] command = new String[]{conv,cmd1,code};
+		String[] command = new String[]{cmd1,code};
+		
         Process p = Runtime.getRuntime().exec(command);
 	    System.out.println(code+":开始爬取");
 	    new InputStreamRunnable(p.getErrorStream()).start();
@@ -40,7 +41,8 @@ public class Spider2 {
 
 	
 	public static int check(String code) throws IOException, InterruptedException {
-		String[] command = new String[]{conv,cmd2,code};
+		//String[] command = new String[]{conv,cmd2,code};
+		String[] command = new String[]{cmd2,code};
 	    BufferedReader br = null;
 	    BufferedReader brError = null;
 	    System.out.println(code+":开始检查");

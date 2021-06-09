@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -47,7 +48,7 @@ public class DownloadDialog {
 		        if(pattern.matcher(downloadID).matches()) {
 		        	dialog.dispose();
 		        } else {
-		        	dialog.dispose();//先加着，不然输入错误的时候又不能前又不能后
+		        	JOptionPane.showMessageDialog(null, "股票代码错误，请重输");
 		        }
 			}
 			
