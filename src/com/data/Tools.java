@@ -87,10 +87,11 @@ public class Tools {
 	 	    		 System.out.println("selectOption="+selectOption);
 	 	    		 
 	 	    		 //获取第i-1个评论下第j-1个标签的第selectOption个选项的count
-	 	    		 int count = conflictList.get(i-1).getOptionCount().get(j-1).get(selectOption)+1;
-	 	    		 conflictList.get(i-1).getOptionCount().get(j-1).set(selectOption, count);
-	 	    		 System.out.println("count="+db.getConflictList().get(i-1).getOptionCount().get(j-1).get(selectOption));
-	 	    		 
+	 	    		 if(selectOption >= 0) {
+	 	    			int count = conflictList.get(i-1).getOptionCount().get(j-1).get(selectOption)+1;
+	 	    		 	conflictList.get(i-1).getOptionCount().get(j-1).set(selectOption, count);
+	 	    		 	System.out.println("count="+db.getConflictList().get(i-1).getOptionCount().get(j-1).get(selectOption));
+	 	    		 }
 	 	    		 //标注不一致设为，更改db相应评论的标注为-1
 	 	    		 if(selectOption!=commentList.get(i-1).getLabelList().get(j-1)) {
 	 	    			commentList.get(i-1).getLabelList().set(j-1, -1);

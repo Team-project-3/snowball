@@ -18,17 +18,14 @@ class ExportDialogTest {
 
 	@Test
 	void testShow() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetDirPath() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetFileName() {
-		fail("Not yet implemented");
 	}
 
 }

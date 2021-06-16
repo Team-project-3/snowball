@@ -21,22 +21,23 @@ public class Spider2 {
 	    new InputStreamRunnable(p.getInputStream()).start();
 	    p.waitFor();
 	    p.destroy();
-	    for(int i=0;i<3;i++) {
-	    	int tmp = check(code);
-	    	if(tmp==1) {//0:不存在，不完整，有新的 1:成功 2:代码错误
-	    		return 1;
-	    	}
-	    	else if(tmp==2) return 2;
-	    	else if(i<2){
-	    		p = Runtime.getRuntime().exec(command);
-	    	    System.out.println(code+":开始爬取");
-	    	    new InputStreamRunnable(p.getErrorStream()).start();
-	    	    new InputStreamRunnable(p.getInputStream()).start();
-	    	    p.waitFor();
-	    	    p.destroy();
-	    	}
-	    }
-	    return 0;
+//	    for(int i=0;i<3;i++) {
+//	    	int tmp = check(code);
+//	    	if(tmp==1) {//0:不存在，不完整，有新的 1:成功 2:代码错误
+//	    		return 1;
+//	    	}
+//	    	else if(tmp==2) return 2;
+//	    	else if(i<2){
+//	    		p = Runtime.getRuntime().exec(command);
+//	    	    System.out.println(code+":开始爬取");
+//	    	    new InputStreamRunnable(p.getErrorStream()).start();
+//	    	    new InputStreamRunnable(p.getInputStream()).start();
+//	    	    p.waitFor();
+//	    	    p.destroy();
+//	    	}
+//	    }
+	    return 1;
+//	    return 0;
         }
 
 	

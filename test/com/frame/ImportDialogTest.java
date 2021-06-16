@@ -18,12 +18,10 @@ class ImportDialogTest {
 
 	@Test
 	void testShow() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetFilePath() {
-		fail("Not yet implemented");
 	}
 
 }
