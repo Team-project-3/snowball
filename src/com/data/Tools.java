@@ -59,6 +59,7 @@ public class Tools {
 	    	//3.1.1.获取db中内容
 	    	 ArrayList<Comment> commentList = db.getCommentList();	
 	 		 ArrayList<com.data.Label> labelList = db.getLabelList();
+	 		 ArrayList<Conflict> conflictList = db.getConflictList();
 	 		 
 	 		 //3.1.2判断标签类是否一致，如果不一致，直接退出，不做db更新
 	    	 for(int i=0;i<sheetLabel.getRows();i++){
@@ -80,23 +81,34 @@ public class Tools {
 	 	    	 //评论内容一致，判断标注
 	 	    	 for(int j=1;j<sheetComment.getColumns();j++) {
 	 	    		 Cell commentOption = sheetComment.getCell(j,i);
+	 	    		 
+	 	    		 //将被选选择项count+1
+	 	    		 int selectOption = Integer.parseInt(commentOption.getContents());
+	 	    		 System.out.println("selectOption="+selectOption);
+	 	    		 
+	 	    		 //获取第i-1个评论下第j-1个标签的第selectOption个选项的count
+	 	    		 int count = conflictList.get(i-1).getOptionCount().get(j-1).get(selectOption)+1;
+	 	    		 conflictList.get(i-1).getOptionCount().get(j-1).set(selectOption, count);
+	 	    		 System.out.println("count="+db.getConflictList().get(i-1).getOptionCount().get(j-1).get(selectOption));
+	 	    		 
 	 	    		 //标注不一致设为，更改db相应评论的标注为-1
-	 	    		 if(Integer.parseInt(commentOption.getContents())!=commentList.get(i-1).getLabelList().get(j-1)) {
+	 	    		 if(selectOption!=commentList.get(i-1).getLabelList().get(j-1)) {
 	 	    			commentList.get(i-1).getLabelList().set(j-1, -1);
 	 	    			System.out.println("标注不一致,位置("+i+","+j+")");
 	 	    		 }
 	 	    	 } 	    
 	 	     } 
+	    	 workbook.close();	
 	    	 return ;		
 		 }
 	     
 	     
 	     //3.2 当db内容为空时，直接更新db
 	     //3.2.1 获取标签 
+	    
 	     for(int i=0;i<sheetLabel.getRows();i++){
 	    	 com.data.Label label = new com.data.Label();
-	    	 ArrayList<String> labelOptions = new ArrayList<String>();//标签选项
-	 
+	    	 ArrayList<String> labelOptions = new ArrayList<String>();//标签选项	    	 
 	    	 Cell labelContent =sheetLabel.getCell(0,i); //标签内容
 	    	 System.out.print(labelContent.getContents()+"  ");
 	         for(int j=0;j<sheetLabel.getColumns()-1;j++){
@@ -105,19 +117,21 @@ public class Tools {
 	            	  break;
 	              }
 	              labelOptions.add(celloption.getContents());
+	              
 	              System.out.print(celloption.getContents()+"  ");
 	          }
-	         System.out.println();
+	         
 	          label.setContent(labelContent.getContents());//标签内容
 	          label.setOptions(labelOptions);
 	          db.addLabel(label);
+	          System.out.println("optionSize="+db.getLabelList().get(i).getOptions().size());
 	     }  
 	     
 	     //3.2.2 获取内容
 	     for(int i=1;i<sheetComment.getRows();i++){
 	    	 Comment comment = new Comment();
 	    	 ArrayList<Integer> commentOptions = new ArrayList<Integer>();
-	    	 Cell commentContent=sheetComment.getCell(0,i);//评论内容
+	    	 Cell commentContent=sheetComment.getCell(0,i);//评论内容 
 	    	 System.out.print(commentContent.getContents()+"  ");
 	    	 for(int j=0;j<sheetComment.getColumns()-1;j++) {
 	    		 Cell commentOption = sheetComment.getCell(j+1,i);
@@ -128,7 +142,35 @@ public class Tools {
 	    	 comment.setContent(commentContent.getContents());
 	    	 comment.setLabelArrayList(commentOptions);
 	    	 db.addComment(comment);
-	     }  
+	    	 
+	     } 
+	     //3.2.3 设置冲突统计
+	     System.out.println("CommentSize="+db.getCommentList().size());
+	     System.out.println("LabelSize="+db.getLabelList().size());
+	     for(int i=0;i<db.getCommentList().size();i++) {
+	    	 
+	    	 Conflict conflict = new Conflict();
+	    	 ArrayList<ArrayList<Integer>> optionCount = new ArrayList<ArrayList<Integer>>();
+	    	 
+	    	 for(int j=0;j<db.getLabelList().size();j++) {
+	    		 System.out.println("optionSize="+db.getLabelList().get(j).getOptions().size());
+	    		 ArrayList<Integer> optionNumber =new ArrayList<Integer>();
+	    		 for(int k=0;k<db.getLabelList().get(j).getOptions().size();k++) {
+	    			 optionNumber.add(0);
+	    		 }
+	    		//获取第i个评论下第j个标签的选项selectOption
+	    		
+	    	    int selectOption = db.getCommentList().get(i).getLabelList().get(j);
+	    	    System.out.println("("+i+","+j+")"+selectOption);
+	    		if(selectOption>=0) {
+	    			optionNumber.set(selectOption,1);
+	    		}    		
+	    		optionCount.add(optionNumber);
+	    	 }
+	    	 conflict.setOptionCount(optionCount);
+	    	 db.addConflict(conflict);
+	     }
+	     
 	     //4.关闭工作簿
 	      workbook.close();	
 	}
