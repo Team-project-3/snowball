@@ -12,7 +12,12 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.data.Label;
+
+import snowball.Main;
 
 public class AddLabelDialog {
 	private Label label;
@@ -27,7 +32,8 @@ public class AddLabelDialog {
 		  //1.弹出对话框
 		jDialog = new JDialog(maintainFrame, "添加标签", model);
         jDialog.setBounds(600,250,300,300);
-        
+        Logger logger1 = LogManager.getLogger(AddLabelDialog.class.getName());
+        logger1.info("用户进入添加标签对话框"); 
 
         //2.设置对话框面板内容
         // 给标签名的jp

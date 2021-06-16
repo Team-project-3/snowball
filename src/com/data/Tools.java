@@ -2,7 +2,6 @@ package com.data;
 
 import manager.Manager;
 
-import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 import jxl.Cell;
 import jxl.Sheet;
@@ -37,6 +37,11 @@ public class Tools {
 	public Map<String, String> getDownloading() {
 		Manager t = new Manager();
 		return t.getStates();
+	}
+	
+	public void downloadDelete(String ID) {
+		Manager t = new Manager();
+		t.delCodeAndState(ID);
 	}
 	
 	public void importData(String file_path) throws BiffException, IOException {
@@ -244,23 +249,43 @@ public class Tools {
 	public void removeLabel(Label label) {
 		ArrayList<Label> list = new ArrayList<>();
 		list=db.getLabelList();
-		if(list!=null) {
-			ArrayList<Comment> list_1 = new ArrayList<>();
-			list_1=db.getCommentList();
-			ArrayList<Integer> list_2 = new ArrayList<>();
-			for(int i = 0 ; i < list.size(); i++) {
-				if(list.get(i)==label) {
-					for(int j = 0 ; j < list_1.size(); j++) {
-						list_2=list_1.get(j).getLabelList();
-						list_2.remove(i);
-						list_1.get(j).setLabelArrayList(list_2);
+		ArrayList<Comment> list_1 = new ArrayList<>();
+		list_1=db.getCommentList();
+		ArrayList<Integer> list_2 = new ArrayList<>();
+		int flag=0;
+		int dir=0;
+		for(int i = 0 ; i < list.size(); i++) {
+			if(list.get(i)==label) {
+				dir=i;
+				for(int j = 0 ; j < list_1.size(); j++) {
+					list_2=list_1.get(j).getLabelList();
+					if(list_2.get(i)!=-1) {
+						flag=1;
+						break;
 					}
 				}
+				break;
+			}
+		}
+		
+		if(flag==0) {
+			for(int i = 0 ; i < list_1.size(); i++) {
+				list_2=list_1.get(i).getLabelList();
+				list_2.remove(dir);
+				list_1.get(i).setLabelArrayList(list_2);
 			}
 			list.remove(label);
 		}
-		else {
-			System.out.println("没有这个标签！");
+		else if(flag==1) {
+			int res=JOptionPane.showConfirmDialog(null, "你想要删除的标签已有标注行为，是否确认删除该标签？", "警告", JOptionPane.YES_NO_OPTION);
+			if(res==JOptionPane.YES_OPTION){ 
+				for(int i = 0 ; i < list_1.size(); i++) {
+					list_2=list_1.get(i).getLabelList();
+					list_2.remove(dir);
+					list_1.get(i).setLabelArrayList(list_2);
+				}
+				list.remove(label);
+			}
 		}
 		db.setLabelList(list);
 	}
@@ -278,7 +303,7 @@ public class Tools {
 			// 初始化labelSum
 			ArrayList<Integer> labelSum = new ArrayList<>();
 			int len = labels.get(i).getOptions().size();
-			for(int j=0; j < len; ++j) {
+			for(int j=0; j <= len; ++j) {
 				labelSum.add(0);
 			}
 			
@@ -286,6 +311,7 @@ public class Tools {
 			for (Comment comment : comments) {
 				int option = comment.getLabelList().get(i);
 				if (option < 0) {
+					labelSum.set(len, labelSum.get(len)+1);
 					continue;
 				}
 				labelSum.set(comment.getLabelList().get(i), labelSum.get(option)+1);

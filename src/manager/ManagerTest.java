@@ -1,13 +1,9 @@
 ﻿package manager;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ManagerTest {
@@ -45,7 +41,7 @@ public class ManagerTest {
 
 	@Test
 	public void testManager() throws InterruptedException {
-
+		/*
 		Manager t1 = new Manager(code[0]);
 		Manager t2 = new Manager(code[1]);
 		t1.start();
@@ -56,7 +52,7 @@ public class ManagerTest {
 		String s2 = t2.getResult();
 		System.out.println(code[0]+" "+s1);
 		System.out.println(code[1]+" "+s2);
-
+		*/
 	}
 
 

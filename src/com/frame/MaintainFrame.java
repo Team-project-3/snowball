@@ -10,14 +10,17 @@ import com.data.Conflict;
 import com.data.DataBank;
 import com.data.Label;
 import com.data.Tools;
+import com.frame.MarkFrame.MyRenderer;
 
 import jxl.read.biff.BiffException;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -39,6 +42,7 @@ public class MaintainFrame {
     private JPanel ConflictPanel;//记录标签冲突
     private ArrayList<ArrayList<JRadioButton>> labelMap;   
     private int index=-1;
+    private ArrayList<Integer> redCols = new ArrayList<>(); 
 
     public void buildFrame() {
     	db = DataBank.getInstence();
@@ -113,7 +117,6 @@ public class MaintainFrame {
         jList.setFont(Font.getFont("楷体"));
         jList.setListData(strData);
         jList.addListSelectionListener(new ListSelectionListener() {
-        	private boolean flag = true;
         	
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -128,20 +131,14 @@ public class MaintainFrame {
                 String[] strData = arrData.toArray(new String[len]);
             	
                 index = jList.getSelectedIndex();
-                if(!flag) {
-                	flag = !flag;
+                
+                if(index < 0 || index >= len) {
+//                	System.out.print(index);
                 	return;
                 }
                 reloadLabels();
-                reloadConflict();
                 
-                if(index < 0 || index >= len) {
-                	System.out.print(index);
-                	return;
-                }
                 jTextArea.setText(strData[index]);
-                flag = !flag;
-               
             }
         });
         jList.setBorder(border);
@@ -149,7 +146,7 @@ public class MaintainFrame {
         jList2.setBounds(5,0,540,270);
         jPanel.add(jList2);
 
-        //4.面板标签内容
+      //4.面板标签内容
         labelPanel = new JPanel();
         labelPanel.setBorder(border);
         labelPanel.setBounds(547,0,150,268);
@@ -216,6 +213,7 @@ public class MaintainFrame {
 					e1.printStackTrace();
 				}
         	}
+
         }
     	
     	private class Ask implements Runnable{
@@ -224,9 +222,15 @@ public class MaintainFrame {
 			@Override
 			public void run() {
 				try {
-			         while(!tools.getDownloading().get(downloadID).equals("已完成")) {
-			            // 让线程睡眠一会
-			            Thread.sleep(500);
+					while(!tools.getDownloading().get(downloadID).equals("已完成")) {
+						if(tools.getDownloading().get(downloadID).equals("代码错误")) {
+							//此处需要弹窗
+							JOptionPane.showMessageDialog(null, "股票代码错误，请重输");
+							tools.downloadDelete(downloadID);
+							break;
+						}
+						// 让线程睡眠一会
+						else Thread.sleep(500);
 			         }
 			         reloadComments();
 			      }catch (InterruptedException e) {
@@ -320,18 +324,27 @@ public class MaintainFrame {
     }
 
     private void reloadComments() {
-    	ArrayList<String> arrData = new ArrayList<>();
+    	DefaultListModel<String> listModel = new DefaultListModel<>();
         ArrayList<Comment> comments = db.getCommentList();
         
+        redCols.clear();
         int len = comments.size();
-        System.out.println(len);
         for(int i = 0; i < len; i++){
-            arrData.add(comments.get(i).getContent());
+            listModel.addElement(comments.get(i).getContent());
+            
+            // 判断是否未标注
+            for(int tmp : comments.get(i).getLabelList()) {
+            	if(tmp < 0) {
+            		redCols.add(i);
+            		break;
+            	}
+            }
         }
 
-        String[] strData = arrData.toArray(new String[len]);
-        jList.setListData(strData);
+        jList.setModel(listModel);
+        jList.setCellRenderer(new MyRenderer(redCols, Color.RED));
         jList.repaint();
+
     }
     
     private void reloadLabels(){
@@ -351,9 +364,12 @@ public class MaintainFrame {
 //    	System.out.println(labelSize);
     	// 第i个标签类
         for(int i=0; i < labelSize; i++){
+        	JPanel jp1 = new JPanel(), jp2 = new JPanel();
+        	jp1.setSize(145, 10);
+        	jp2.setSize(145, 10);
             JLabel label = new JLabel(labelList.get(i).getContent());
             label.setVisible(true);
-            labelPanel.add(label);
+            jp1.add(label);
             
             ArrayList<JRadioButton> jrbList = new ArrayList<>();
             ButtonGroup BG = new ButtonGroup();
@@ -365,7 +381,7 @@ public class MaintainFrame {
                 	jrb.setSelected(true);
                 } else {
                 	jrb.setSelected(false);
-                	jrb.setEnabled(false);
+//                	jrb.setEnabled(false);
                 }
                 jrb.addActionListener(new ActionListener() {
 
@@ -375,6 +391,21 @@ public class MaintainFrame {
 							for (int j = 0; j < labelMap.get(i).size(); ++j) {
 								if (e.getSource() == labelMap.get(i).get(j)) {
 									db.getCommentList().get(index).getLabelList().set(i, j);
+									
+									// 更新是否红底
+									boolean flag = true;
+									for(int tmp : db.getCommentList().get(index).getLabelList()) {
+						            	if(tmp < 0) {
+						            		flag = false;
+						            		break;
+						            	}
+						            }
+									if(flag) {
+										redCols.remove((Object)index);
+										jList.setCellRenderer(new MyRenderer(redCols, Color.RED));
+								        jList.repaint();
+									}
+									
 									return;
 								}
 							}
@@ -383,17 +414,18 @@ public class MaintainFrame {
 					}
                 	
                 });
-                
                 BG.add(jrb);
                 jrbList.add(jrb);
-                labelPanel.add(jrb);
+                jp2.add(jrb);
+                
+                labelPanel.add(jp1);
+                labelPanel.add(jp2);
             }
             
             labelMap.add(jrbList);
         }
         labelPanel.repaint();
     }
-    
     
     private void reloadConflict(){
     	ArrayList<Label> labelList = db.getLabelList();    	
@@ -425,6 +457,31 @@ public class MaintainFrame {
         		}
         	}
         }                                    
-        ConflictPanel.updateUI();             
+        ConflictPanel.updateUI();   
+  }
+
+    class MyRenderer extends DefaultListCellRenderer {
+    	private Color rowcolor;
+		private ArrayList<Integer> rows;
+
+		public MyRenderer(ArrayList<Integer> rows, Color color) {
+            this.rowcolor = color;
+            this.rows = rows;
+        }
+		
+		public Component getListCellRendererComponent(
+				JList list, Object value,
+	            int index, boolean isSelected, 
+	            boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			for (int i = 0; i < rows.size(); i++) {
+				if (index == rows.get(i)) {
+					setBackground(this.rowcolor);
+//	                setFont(getFont());
+	            }
+	        }
+	 
+	        return this;
+	    }
     }
 }

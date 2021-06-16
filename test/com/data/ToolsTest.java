@@ -121,6 +121,7 @@ class ToolsTest {
 		comment.setContent("第一个评论");
 		ArrayList<Integer> list = new ArrayList<>();
 		list.add(1);
+		list.add(-1);
 		list.add(2);
 		comment.setLabelArrayList(list);
 		ArrayList<Comment> com = new ArrayList<>();
@@ -144,11 +145,33 @@ class ToolsTest {
 		options_1.add("what");
 		options_1.add("and you");
 		l2.setOptions(options_1);
+		
+		Label l3=new Label();
+		l3.setId(2);
+		l3.setContent("第三个标签");
+		ArrayList<String> options_2 = new ArrayList<>();
+		options_2=l3.getOptions();
+		options_2.add("hey");
+		options_2.add("lalala");
+		l3.setOptions(options_2);
+		
 		ArrayList<Label> lab = new ArrayList<>();
 		lab.add(l1);
 		lab.add(l2);
+		lab.add(l3);
 		db.setLabelList(lab);
-		
+		//删除没有标注的标签
+		tool.removeLabel(l2);
+		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
+			assertNotEquals(db.getLabelList().get(i).getId(),l2.getId());
+			assertNotEquals(db.getLabelList().get(i).getContent(),l2.getContent());
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(0),l2.getOptions().get(0));
+			assertNotEquals(db.getLabelList().get(i).getOptions().get(1),l2.getOptions().get(1));
+		}
+		for(int i = 0 ; i < db.getCommentList().get(0).getLabelList().size() ; i++) {
+			assertNotEquals(db.getCommentList().get(0).getLabelList().get(i),-1);
+		}
+		//删除有标注过的标签
 		tool.removeLabel(l1);
 		for(int i = 0 ; i < db.getLabelList().size() ; i++) {
 			assertNotEquals(db.getLabelList().get(i).getId(),l1.getId());
