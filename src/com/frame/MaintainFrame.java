@@ -6,6 +6,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.data.Comment;
+import com.data.Conflict;
 import com.data.DataBank;
 import com.data.Label;
 import com.data.Tools;
@@ -38,7 +39,8 @@ public class MaintainFrame {
     private JList<String> jList;
     private JPanel jPanel;
     private JPanel labelPanel;
-    private ArrayList<ArrayList<JRadioButton>> labelMap;
+    private JPanel ConflictPanel;//记录标签冲突
+    private ArrayList<ArrayList<JRadioButton>> labelMap;   
     private int index=-1;
     private ArrayList<Integer> redCols = new ArrayList<>(); 
 
@@ -47,7 +49,7 @@ public class MaintainFrame {
     	tools = new Tools(db);
     	
         //1.设置maintainFrame参数
-        maintainFrame.setBounds(500,200,720,540);
+        maintainFrame.setBounds(500,200,870,540);
         maintainFrame.setVisible(true);
         maintainFrame.setDefaultCloseOperation(HIDE_ON_CLOSE);
 
@@ -95,7 +97,7 @@ public class MaintainFrame {
         //3.面板评论内容
         jPanel = new JPanel(null);
         jPanel.setVisible(true);
-        jPanel.setBounds(0,0,720,540);
+        jPanel.setBounds(0,0,870,540);
         
         ArrayList<String> arrData = new ArrayList<>();
         ArrayList<Comment> comments = db.getCommentList();
@@ -108,7 +110,7 @@ public class MaintainFrame {
         String[] strData = arrData.toArray(new String[len]);
         JTextArea jTextArea = new JTextArea("评论内容\n");
         jList = new JList<String>();
-        Border border = BorderFactory.createLineBorder(Color.BLACK,2);
+        Border border = BorderFactory.createLineBorder(Color.BLACK,1);
 
         jList.setBounds(5,0,540,270);
         jList.setBackground(Color.lightGray);
@@ -146,19 +148,26 @@ public class MaintainFrame {
 
       //4.面板标签内容
         labelPanel = new JPanel();
-        labelPanel.setBounds(550,0,145,250);
-        reloadLabels();
+        labelPanel.setBorder(border);
+        labelPanel.setBounds(547,0,150,268);
+       
         labelPanel.setVisible(true);
         jPanel.add(labelPanel);
+        
+        //5.面板标签冲突
+        ConflictPanel = new JPanel();
+        ConflictPanel.setBorder(border);
+        ConflictPanel.setBounds(700,0,150,268);
+        ConflictPanel.setVisible(true);
+        jPanel.add(ConflictPanel);
 
-        //5.面板内容文本域
+        //6.面板内容文本域
         jTextArea.setBorder(border);
-        jTextArea.setBounds(5,270,690,190);
+        jTextArea.setBounds(5,270,845,190);
         jTextArea.setLineWrap(true);
         jPanel.add(jTextArea);
+             
         maintainFrame.setContentPane(jPanel);
-
-
     }
 
     private class ImportActionListener implements ActionListener {
@@ -169,6 +178,7 @@ public class MaintainFrame {
            
            reloadComments();
            reloadLabels();
+           
            System.out.println("import");
         }
     }
@@ -417,6 +427,39 @@ public class MaintainFrame {
         labelPanel.repaint();
     }
     
+    private void reloadConflict(){
+    	ArrayList<Label> labelList = db.getLabelList();    	
+    	ArrayList<Conflict> conflictLst = db.getConflictList();
+    	int labelSize = labelList.size();
+    	ArrayList<Integer> labelSelect;
+    	if (index < 0) {
+    		return;
+    	} else {
+    		labelSelect = db.getCommentList().get(index).getLabelList();
+    	}
+    	ConflictPanel.removeAll();
+    	JLabel conflict = new JLabel("冲突标签：          ");
+    	conflict.setVisible(true);
+		ConflictPanel.add(conflict);
+    	
+        for(int i=0; i < labelSize; i++){
+        	//值小于0，i处标签有冲突
+        	if(labelSelect.get(i)<0) {
+        		JLabel label = new JLabel(labelList.get(i).getContent());
+        		label.setVisible(true);
+        		ConflictPanel.add(label);
+        		for(int j=0;j<labelList.get(i).getOptions().size();j++) {
+        			String optionName = labelList.get(i).getOptions().get(j);
+        			Integer optionCount = conflictLst.get(index).getOptionCount().get(i).get(j);
+        			JLabel option = new JLabel(optionName+":"+optionCount.toString());
+        			option.setVisible(true);
+            		ConflictPanel.add(option);
+        		}
+        	}
+        }                                    
+        ConflictPanel.updateUI();   
+  }
+
     class MyRenderer extends DefaultListCellRenderer {
     	private Color rowcolor;
 		private ArrayList<Integer> rows;
