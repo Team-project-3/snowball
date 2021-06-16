@@ -17,7 +17,7 @@ public class Main {
         JFrame jFrame = new JFrame("数据标注辅助软件");
         MainFrame mainFrame = new MainFrame(jFrame);
         mainFrame.buildFrame();
-        logger.entry(); 
+        logger.entry();
         logger.error("Did it again!");   //error级别的信息，参数就是你输出的信息
         logger.info("我是info信息");    //info级别的信息
         logger.debug("我是debug信息");
