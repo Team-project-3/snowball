@@ -308,6 +308,13 @@ public class MaintainFrame {
         	Label label = addLabelDialog.getLabel();
         	if (label != null) {
         		tools.addLabel(label);
+        		
+        		redCols.clear();
+        		int len = db.getCommentList().size();
+        		for(int i=0; i<len; ++i) {
+        			redCols.add(i);
+        		}
+        		
         		reloadLabels();
         	}
         }
