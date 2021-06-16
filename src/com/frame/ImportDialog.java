@@ -12,6 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.data.Tools;
 
 import jxl.read.biff.BiffException;
@@ -25,6 +28,8 @@ public class ImportDialog {
 
 
 	public ImportDialog(JFrame frame) {
+		 Logger logger5 = LogManager.getLogger(AddLabelDialog.class.getName());
+	        logger5.info("用户进入数据导入对话框"); 
 		// TODO Auto-generated constructor stub
 		//1.弹出对话框
 				parentFrame = frame;

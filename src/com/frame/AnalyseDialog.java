@@ -15,6 +15,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -52,6 +54,9 @@ public class AnalyseDialog{
 	}
 	
 	public void show(Frame frame) {
+		
+		 Logger logger2 = LogManager.getLogger(AddLabelDialog.class.getName());
+	        logger2.info("用户进入统计分析对话框"); 
         //1.弹出对话框
         jDialog = new JDialog(frame, "统计分析", true);
         jDialog.setBounds(600,250,picW+20,picH+100);

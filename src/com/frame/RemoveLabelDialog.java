@@ -12,6 +12,9 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.data.Label;
 
 public class RemoveLabelDialog {
@@ -26,6 +29,8 @@ public class RemoveLabelDialog {
 
 	// 该方法显示对话框
 	public void show(Frame frame, boolean model) {
+		 Logger logger9 = LogManager.getLogger(AddLabelDialog.class.getName());
+	        logger9.info("用户进入删除标签对话框");
 		//1.弹出对话框
         jDialog = new JDialog(frame, "删除标签", model);
         jDialog.setBounds(600,250,300,400);

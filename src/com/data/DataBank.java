@@ -6,6 +6,7 @@ public class DataBank {
 	private static DataBank db = new DataBank();
     private ArrayList<Comment> commentList = new ArrayList<>();
     private ArrayList<Label> labelList = new ArrayList<>();
+    private ArrayList<Conflict> conflictList = new ArrayList<>();
     
     private DataBank() {}
     public static DataBank getInstence() {
@@ -44,4 +45,19 @@ public class DataBank {
     public boolean removeLabel(Label label) {
     	return labelList.remove(label);
     }
+    
+    public boolean addConflict(Conflict conflict) {
+    	return conflictList.add(conflict);
+    }
+    
+    public boolean removeConflict(Conflict conflict) {
+    	return conflictList.remove(conflict);
+    }
+    
+	public ArrayList<Conflict> getConflictList() {
+		return conflictList;
+	}
+	public void setConflictList(ArrayList<Conflict> conflictList) {
+		this.conflictList = conflictList;
+	}
 }

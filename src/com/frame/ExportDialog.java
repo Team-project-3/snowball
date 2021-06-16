@@ -12,6 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.data.Tools;
 
 import jxl.write.WriteException;
@@ -23,6 +26,8 @@ public class ExportDialog {
 	private JTextField filePath = null;
 
 	public ExportDialog(JFrame frame) {
+		 Logger logger4 = LogManager.getLogger(AddLabelDialog.class.getName());
+	        logger4.info("用户进入数据导出对话框"); 
 		// TODO Auto-generated constructor stub
 		//1.弹出对话框
 		maintainFrame = frame;
