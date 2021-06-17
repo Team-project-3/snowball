@@ -10,8 +10,6 @@ import com.data.Conflict;
 import com.data.DataBank;
 import com.data.Label;
 import com.data.Tools;
-import com.frame.MarkFrame.MyRenderer;
-
 import jxl.read.biff.BiffException;
 
 import java.awt.Color;
@@ -20,7 +18,6 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -137,6 +134,7 @@ public class MaintainFrame {
                 	return;
                 }
                 reloadLabels();
+                reloadConflict();
                 
                 jTextArea.setText(strData[index]);
             }
@@ -178,6 +176,7 @@ public class MaintainFrame {
            
            reloadComments();
            reloadLabels();
+           reloadConflict();
            
            System.out.println("import");
         }
@@ -299,6 +298,7 @@ public class MaintainFrame {
         	if (label != null) {
         		tools.removeLabel(label);
         		reloadLabels();
+        		reloadConflict();
         	}
         }
     }
@@ -437,6 +437,7 @@ public class MaintainFrame {
     private void reloadConflict(){
     	ArrayList<Label> labelList = db.getLabelList();    	
     	ArrayList<Conflict> conflictLst = db.getConflictList();
+    	
     	int labelSize = labelList.size();
     	ArrayList<Integer> labelSelect;
     	if (index < 0) {
@@ -456,7 +457,11 @@ public class MaintainFrame {
         		label.setVisible(true);
         		ConflictPanel.add(label);
         		for(int j=0;j<labelList.get(i).getOptions().size();j++) {
+        			if(index >= conflictLst.size()) {
+        				break;
+        			}
         			String optionName = labelList.get(i).getOptions().get(j);
+//        			System.out.println(index*10000+i*100+j);
         			Integer optionCount = conflictLst.get(index).getOptionCount().get(i).get(j);
         			JLabel option = new JLabel(optionName+":"+optionCount.toString());
         			option.setVisible(true);

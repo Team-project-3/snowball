@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import jxl.read.biff.BiffException;
+
 public class SpiderTest {
 
 	String code="SH600415";
@@ -34,7 +36,7 @@ public class SpiderTest {
 	}
 	*/
 	@Test(timeout = 600000)
-	public void testRun() throws IOException, InterruptedException {
+	public void testRun() throws IOException, InterruptedException, BiffException {
 		Spider2 s = new Spider2();
 		int num=s.run(code);
 		assertEquals(1, num);

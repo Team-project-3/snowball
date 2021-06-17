@@ -18,8 +18,6 @@ import org.apache.logging.log4j.Logger;
 import com.data.Tools;
 
 import jxl.read.biff.BiffException;
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 
 public class ImportDialog {
 	private JDialog jDialog=null;

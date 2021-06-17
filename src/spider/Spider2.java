@@ -1,16 +1,24 @@
 ﻿package spider;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import com.data.Comment;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
 
 public class Spider2 {
 	
 	static String cmd1 = "爬虫.exe";
 	static String cmd2 = "爬虫检查.exe";
     //static String conv = "python";
-	public int run(String code) throws IOException, InterruptedException {
+	public int run(String code) throws IOException, InterruptedException, BiffException {
 		//System.out.println(System.getProperty("user.dir"));//user.dir指定了当前的路径
 	    //String[] command = new String[]{conv,cmd1,code};
 		String[] command = new String[]{cmd1,code};
@@ -21,32 +29,35 @@ public class Spider2 {
 	    new InputStreamRunnable(p.getInputStream()).start();
 	    p.waitFor();
 	    p.destroy();
-//	    for(int i=0;i<3;i++) {
-//	    	int tmp = check(code);
-//	    	if(tmp==1) {//0:不存在，不完整，有新的 1:成功 2:代码错误
-//	    		return 1;
-//	    	}
-//	    	else if(tmp==2) return 2;
-//	    	else if(i<2){
-//	    		p = Runtime.getRuntime().exec(command);
-//	    	    System.out.println(code+":开始爬取");
-//	    	    new InputStreamRunnable(p.getErrorStream()).start();
-//	    	    new InputStreamRunnable(p.getInputStream()).start();
-//	    	    p.waitFor();
-//	    	    p.destroy();
-//	    	}
-//	    }
-	    return 1;
-//	    return 0;
+	    
+	    for(int i=0;i<3;i++) {
+	    	int tmp = check(code);
+	    	if(tmp==1) {//0:不存在，不完整，有新的 1:成功 2:代码错误
+	    		return 1;
+	    	}
+	    	else if(tmp==2) return 2;
+	    	else if(i<2){
+	    		p = Runtime.getRuntime().exec(command);
+	    	    System.out.println(code+":开始爬取");
+	    	    new InputStreamRunnable(p.getErrorStream()).start();
+	    	    new InputStreamRunnable(p.getInputStream()).start();
+	    	    p.waitFor();
+	    	    p.destroy();
+	    	}
+	    }
+	    
+	    //return 1;
+	    return 0;
         }
 
 	
-	public static int check(String code) throws IOException, InterruptedException {
+	public static int check(String code) throws IOException, InterruptedException, BiffException {
 		//String[] command = new String[]{conv,cmd2,code};
 		String[] command = new String[]{cmd2,code};
-	    BufferedReader br = null;
-	    BufferedReader brError = null;
+	    //BufferedReader br = null;
+	    //BufferedReader brError = null;
 	    System.out.println(code+":开始检查");
+	    /*
 	    try {
 	    	Process p = Runtime.getRuntime().exec(command);
             String line = null;
@@ -85,8 +96,34 @@ public class Spider2 {
                 }
             }
 	    }
-	    
-
+	    */
+	    Process p = Runtime.getRuntime().exec(command);
+	    p.waitFor();
+	    p.destroy();
+	    Workbook workbook=Workbook.getWorkbook(new File("./"+code+".xls")); 
+		Sheet sheet=workbook.getSheet(1);
+		Cell cell=sheet.getCell(0,0);
+		String Content=cell.getContents();
+		if(Content.equals("文件不存在")) {
+    		System.out.println(code+":文件不存在");
+        	return 0;
+        }
+        else if(Content.equals("爬取不完整")) {
+        	System.out.println(code+":爬取不完整");
+        	return 0;
+        }
+        else if(Content.equals("有新的评论，重新爬取")) {
+        	System.out.println(code+":有新的评论，重新爬取");
+        	return 0;
+        }
+        else if(Content.equals("代码错误")) {
+        	System.out.println(code+":代码错误");
+        	return 2;
+        }
+        else if(Content.equals("爬取完整")) {
+        	System.out.println(code+":爬取完整");
+        	return 1;
+        }
 	    
         return 0;
 	    }
@@ -113,7 +150,7 @@ public class Spider2 {
 	    }
 	}
 	
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public static void main(String[] args) throws IOException, InterruptedException, BiffException {
 		Spider2 s=new Spider2();
 		s.run("SH600415");
 	}
